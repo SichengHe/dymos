@@ -291,6 +291,16 @@ const thebe_selector_output = ".output, .cell_output"
      Water Rocket
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../examples/cart_pole/cart_pole.html">
+     Cart-Pole Optimal Control
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../examples/brachistochrone/brachistochrone_tandem_phases.html">
+     Brachistochrone with tandem phases
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -313,6 +323,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="../../features/phases/phases.html">
      Phases of a Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/analytic_phases.html">
+     Analytic Phases in Dymos
     </a>
    </li>
    <li class="toctree-l2">
@@ -429,8 +444,8 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../api/run_problem.html">
-     The Dymos run_problem function
+    <a class="reference internal" href="../../api/run_problem_function.html">
+     The run_problem function
     </a>
    </li>
    <li class="toctree-l2">
@@ -802,13 +817,13 @@ Dynamic systems are typically defined by some set of ordinary
 differential equations (the ODE) which governs their behavior.</p>
 <p>Consider a simple damped harmonic oscillator.</p>
 <p><img alt="Damped harmonic oscillator free-body diagram" src="../../_images/spring_mass_damper.png" /></p>
-<div class="amsmath math notranslate nohighlight" id="equation-6659096d-8309-4784-b225-7ba08260f5db">
-<span class="eqno">(11)<a class="headerlink" href="#equation-6659096d-8309-4784-b225-7ba08260f5db" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-b7a47d5f-55ea-4ea0-a67e-f67fbb6441f1">
+<span class="eqno">(11)<a class="headerlink" href="#equation-b7a47d5f-55ea-4ea0-a67e-f67fbb6441f1" title="Permalink to this equation">#</a></span>\[\begin{align}
     \ddot{x} &amp;= -\frac{kx}{m} - \frac{c \dot{x}}{m}
 \end{align}\]</div>
 <p>Converting this to a first order system results in an ODE system with two states:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-eb919f38-827f-4b9b-8e8c-ed44cedf9a41">
-<span class="eqno">(12)<a class="headerlink" href="#equation-eb919f38-827f-4b9b-8e8c-ed44cedf9a41" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-a806100f-545a-4fed-8315-717ba47dfa17">
+<span class="eqno">(12)<a class="headerlink" href="#equation-a806100f-545a-4fed-8315-717ba47dfa17" title="Permalink to this equation">#</a></span>\[\begin{align}
     \dot{x} &amp;= v \\
     \dot{v} &amp;= -\frac{kx}{m} - \frac{c \dot{x}}{m}
 \end{align}\]</div>
@@ -889,7 +904,7 @@ Some elements of this code will be explained later, but we’ll hit the highligh
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="c1"># plt.switch_backend(&#39;Agg&#39;)  # disable plotting to the screen</span>
 
-<span class="kn">from</span> <span class="nn">dymos.examples.oscillator.doc.oscillator_ode</span> <span class="kn">import</span> <span class="n">OscillatorODE</span>
+<span class="kn">from</span> <span class="nn">dymos.examples.oscillator.oscillator_ode</span> <span class="kn">import</span> <span class="n">OscillatorODE</span>
 
 <span class="c1"># Instantiate an OpenMDAO Problem instance.</span>
 <span class="n">prob</span> <span class="o">=</span> <span class="n">om</span><span class="o">.</span><span class="n">Problem</span><span class="p">()</span>
@@ -954,13 +969,17 @@ Some elements of this code will be explained later, but we’ll hit the highligh
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- Constraint Report [traj] ---
     --- phase0 ---
         None
-
-
-Simulating trajectory traj
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulating trajectory traj
 Done simulating trajectory traj
 </pre></div>
 </div>
-<img alt="../../_images/intro_ivp_5_1.png" src="../../_images/intro_ivp_5_1.png" />
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_8367/1136298122.py:61: MatplotlibDeprecationWarning: Passing the loc parameter of __init__() positionally is deprecated since Matplotlib 3.6; the parameter will become keyword-only two minor releases later.
+  fig.legend((sol[0], sim[0]), (&#39;solution&#39;, &#39;simulation&#39;), &#39;lower right&#39;, ncol=2)
+</pre></div>
+</div>
+<img alt="../../_images/intro_ivp_5_3.png" src="../../_images/intro_ivp_5_3.png" />
 </div>
 </div>
 </section>
@@ -1029,7 +1048,7 @@ Otherwise, we can pass it only to certain states as an argument to <code class="
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>  <span class="c1"># disable plotting to the screen</span>
 
-<span class="kn">from</span> <span class="nn">dymos.examples.oscillator.doc.oscillator_ode</span> <span class="kn">import</span> <span class="n">OscillatorODE</span>
+<span class="kn">from</span> <span class="nn">dymos.examples.oscillator.oscillator_ode</span> <span class="kn">import</span> <span class="n">OscillatorODE</span>
 
 <span class="c1"># Instantiate an OpenMDAO Problem instance.</span>
 <span class="n">prob</span> <span class="o">=</span> <span class="n">om</span><span class="o">.</span><span class="n">Problem</span><span class="p">()</span>
@@ -1100,15 +1119,19 @@ Otherwise, we can pass it only to certain states as an argument to <code class="
 traj.phases.phase0
 ==================
 NL: Newton 0 ; 64.9519053 1
-NL: Newton 1 ; 5.02960276e-08 7.74358002e-10
-NL: Newton 2 ; 6.67418801e-15 1.02755846e-16
+NL: Newton 1 ; 5.02959876e-08 7.74357386e-10
+NL: Newton 2 ; 4.83213257e-15 7.43955478e-17
 NL: Newton Converged
-
-Simulating trajectory traj
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulating trajectory traj
 Done simulating trajectory traj
 </pre></div>
 </div>
-<img alt="../../_images/intro_ivp_7_1.png" src="../../_images/intro_ivp_7_1.png" />
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_8367/2581959376.py:61: MatplotlibDeprecationWarning: Passing the loc parameter of __init__() positionally is deprecated since Matplotlib 3.6; the parameter will become keyword-only two minor releases later.
+  fig.legend((sol[0], sim[0]), (&#39;solution&#39;, &#39;simulation&#39;), &#39;lower right&#39;, ncol=2)
+</pre></div>
+</div>
 </div>
 </div>
 </section>
@@ -1126,7 +1149,7 @@ Even though the initial time and duration of the phase are fixed, we provide the
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">switch_backend</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>  <span class="c1"># disable plotting to the screen</span>
 
-<span class="kn">from</span> <span class="nn">dymos.examples.oscillator.doc.oscillator_ode</span> <span class="kn">import</span> <span class="n">OscillatorODE</span>
+<span class="kn">from</span> <span class="nn">dymos.examples.oscillator.oscillator_ode</span> <span class="kn">import</span> <span class="n">OscillatorODE</span>
 
 <span class="c1"># Instantiate an OpenMDAO Problem instance.</span>
 <span class="n">prob</span> <span class="o">=</span> <span class="n">om</span><span class="o">.</span><span class="n">Problem</span><span class="p">()</span>
@@ -1210,15 +1233,21 @@ Even though the initial time and duration of the phase are fixed, we provide the
             Gradient evaluations: 1
 Optimization Complete
 -----------------------------------
-
-Simulating trajectory traj
-Done simulating trajectory traj
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/openmdao/core/total_jac.py:1567: DerivativesWarning:Constraints or objectives [(&#39;traj.phases.phase0.time.time&#39;, inds=[15])] cannot be impacted by the design variables of the problem.
+/usr/share/miniconda/envs/test/lib/python3.10/site-packages/tabulate/__init__.py:108: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  or (len(row) &gt;= 2 and row[1] == SEPARATING_LINE)
 </pre></div>
 </div>
-<img alt="../../_images/intro_ivp_10_3.png" src="../../_images/intro_ivp_10_3.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulating trajectory traj
+Done simulating trajectory traj
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_8367/1344483348.py:71: MatplotlibDeprecationWarning: Passing the loc parameter of __init__() positionally is deprecated since Matplotlib 3.6; the parameter will become keyword-only two minor releases later.
+  fig.legend((sol[0], sim[0]), (&#39;solution&#39;, &#39;simulation&#39;), &#39;lower right&#39;, ncol=2)
+</pre></div>
+</div>
 </div>
 </div>
 </section>

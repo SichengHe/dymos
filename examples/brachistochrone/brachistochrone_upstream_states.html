@@ -287,6 +287,16 @@ const thebe_selector_output = ".output, .cell_output"
      Water Rocket
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../cart_pole/cart_pole.html">
+     Cart-Pole Optimal Control
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="brachistochrone_tandem_phases.html">
+     Brachistochrone with tandem phases
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -309,6 +319,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="../../features/phases/phases.html">
      Phases of a Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/analytic_phases.html">
+     Analytic Phases in Dymos
     </a>
    </li>
    <li class="toctree-l2">
@@ -425,8 +440,8 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../api/run_problem.html">
-     The Dymos run_problem function
+    <a class="reference internal" href="../../api/run_problem_function.html">
+     The run_problem function
     </a>
    </li>
    <li class="toctree-l2">
@@ -1118,17 +1133,17 @@ INFO: checking out_of_order
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:check_config:checking auto_ivc_warnings
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Full total jacobian was computed 3 times, taking 0.110309 seconds.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Full total jacobian was computed 3 times, taking 0.109305 seconds.
 Total jacobian shape: (41, 51) 
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jacobian shape: (41, 51)  (12.91% nonzero)
+
+
+Jacobian shape: (41, 51)  (12.91% nonzero)
 FWD solves: 8   REV solves: 0
 Total colors vs. total size: 8 vs 51  (84.3% improvement)
 
 Sparsity computed using tolerance: 1e-25
-Time to compute sparsity: 0.110309 sec.
-Time to compute coloring: 0.031592 sec.
+Time to compute sparsity: 0.109305 sec.
+Time to compute coloring: 0.032430 sec.
 Memory to compute coloring: 0.000000 MB.
 </pre></div>
 </div>
@@ -1139,6 +1154,10 @@ Memory to compute coloring: 0.000000 MB.
             Gradient evaluations: 63
 Optimization Complete
 -----------------------------------
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/tabulate/__init__.py:108: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  or (len(row) &gt;= 2 and row[1] == SEPARATING_LINE)
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[0.        ]

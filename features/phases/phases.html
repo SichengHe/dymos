@@ -55,7 +55,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Segments" href="segments.html" />
+    <link rel="next" title="Analytic Phases in Dymos" href="analytic_phases.html" />
     <link rel="prev" title="Phases" href="phases_list.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -291,6 +291,16 @@ const thebe_selector_output = ".output, .cell_output"
      Water Rocket
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../examples/cart_pole/cart_pole.html">
+     Cart-Pole Optimal Control
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../examples/brachistochrone/brachistochrone_tandem_phases.html">
+     Brachistochrone with tandem phases
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -313,6 +323,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2 current active">
     <a class="current reference internal" href="#">
      Phases of a Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="analytic_phases.html">
+     Analytic Phases in Dymos
     </a>
    </li>
    <li class="toctree-l2">
@@ -429,8 +444,8 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../api/run_problem.html">
-     The Dymos run_problem function
+    <a class="reference internal" href="../../api/run_problem_function.html">
+     The run_problem function
     </a>
    </li>
    <li class="toctree-l2">
@@ -664,12 +679,36 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#features-of-implicit-and-explicit-phases">
+   Features of Implicit and Explicit Phases
+  </a>
+ </li>
+</ul>
+
+    </nav>
 </div>
     </div>
     <div class="article row">
@@ -681,6 +720,19 @@ title="Print to PDF"
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#features-of-implicit-and-explicit-phases">
+   Features of Implicit and Explicit Phases
+  </a>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -697,8 +749,8 @@ Each phase represents the trajectory of a dynamical system, and may be subject t
 Multiple phases may be assembled to form one or more trajectories by enforcing compatibility constraints between them.</p>
 <p>For implicit and explicit phases, the equations-of-motion or process equations are defined via an ordinary differential equation.</p>
 <p>An ODE is of the form</p>
-<div class="amsmath math notranslate nohighlight" id="equation-12b7360a-64cf-49ad-8771-0e778eacbe0d">
-<span class="eqno">(81)<a class="headerlink" href="#equation-12b7360a-64cf-49ad-8771-0e778eacbe0d" title="Permalink to this equation">#</a></span>\[\begin{align}  
+<div class="amsmath math notranslate nohighlight" id="equation-0492cdfd-f5e0-4244-997d-2caba70039cf">
+<span class="eqno">(86)<a class="headerlink" href="#equation-0492cdfd-f5e0-4244-997d-2caba70039cf" title="Permalink to this equation">#</a></span>\[\begin{align}  
     \frac{\partial \textbf x}{\partial t} = \textbf f(t, \textbf x, \textbf u)
 \end{align}\]</div>
 <p>where
@@ -711,8 +763,8 @@ and
 In addition, Dymos automatically calculates the first and second time-derivatives of the controls.
 These derivatives can then be utilized as via constraints or as additional parameters to the ODE.
 Subsequently, the optimal control problem as solved by Dymos can be expressed as:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-f02a74ac-2b59-4803-ad7d-4e1d0b564e12">
-<span class="eqno">(82)<a class="headerlink" href="#equation-f02a74ac-2b59-4803-ad7d-4e1d0b564e12" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-3770955e-3759-4369-85f7-03676bee497e">
+<span class="eqno">(87)<a class="headerlink" href="#equation-3770955e-3759-4369-85f7-03676bee497e" title="Permalink to this equation">#</a></span>\[\begin{align}
   \textrm{Minimize}:&amp; \quad J = \textbf f_{obj}(t, \textbf x, \textbf u, \dot{\textbf u}, \ddot{\textbf u}) \\
   \textrm{subject to:}&amp; \\
   &amp;\textrm{system dynamics} \quad &amp;\frac{\partial \textbf x}{\partial t} &amp;= \textbf f_{ode}(t, \textbf x, \textbf u, \dot{\textbf u}, \ddot{\textbf u}) \\
@@ -725,14 +777,25 @@ Subsequently, the optimal control problem as solved by Dymos can be expressed as
 \end{align}\]</div>
 <p>The ability to utilize control derivatives in the equations of motion provides some unique capabilities, namely the ability to
 easily solve problems using <em>differential inclusion</em>, which will be demonstrated in the examples.</p>
-<p>The solution techniques used by the Phase classes in Dymos generally fall into two categories:
-implicit and explicit phases.  They differ in underlying details but both allow for the same
+<p>The solution techniques used by the Phase classes in Dymos generally fall into three categories:
+implicit, explicit, and analytic.  They differ in underlying details but mostly allow for the same
 general form of the optimal control problem.</p>
+<p>Implicit solution techniques (using the <em>Radau Pseudospectral Method</em> or <em>Gauss-Lobatto Collocation</em> solve the ODE “all at once” and iteratively change the values of the state variables until the rates of change from the dynamics agree with the rates of change obtained by fitting polynomials to the states over time.
+Typically, some parameters and control variables affect the path of the state variables.</p>
+<p>Explicit solution techniques are typical <em>shooting</em> techniques that propagate the dynamics forward in time from some given initial condition.
+Like the implicit techniques, using an explicit numerical integration allows for some set of parameters or controls to affect the dynamics of the system.</p>
+<p>With an analytic solution, there is no numeric integration occuring because the solution is known analytically. These phases are a fast way to propagate simple dynamics when an analytic solution is avaiable.
+The downside to analytic solutions is that they don’t allow for the input of a general time-varying control.
+Such systems are only controlled static <em>parameters</em> of the phase.</p>
+<section id="features-of-implicit-and-explicit-phases">
+<h2>Features of Implicit and Explicit Phases<a class="headerlink" href="#features-of-implicit-and-explicit-phases" title="Permalink to this headline">#</a></h2>
+<p><a class="reference internal" href="analytic_phases.html"><span class="doc std std-doc">Analytic Phases</span></a></p>
 <p><a class="reference internal" href="segments.html"><span class="doc std std-doc">Segments</span></a></p>
 <p><a class="reference internal" href="variables.html"><span class="doc std std-doc">Variables</span></a></p>
 <p><a class="reference internal" href="constraints.html"><span class="doc std std-doc">Constraints</span></a></p>
 <p><a class="reference internal" href="objective.html"><span class="doc std std-doc">Objective</span></a></p>
 <p><a class="reference internal" href="timeseries.html"><span class="doc std std-doc">Timeseries Outputs</span></a></p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -769,10 +832,10 @@ general form of the optimal control problem.</p>
             <p class="prev-next-title">Phases</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="segments.html" title="next page">
+    <a class='right-next' id="next-link" href="analytic_phases.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Segments</p>
+        <p class="prev-next-title">Analytic Phases in Dymos</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>

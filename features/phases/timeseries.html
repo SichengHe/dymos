@@ -289,6 +289,16 @@ const thebe_selector_output = ".output, .cell_output"
      Water Rocket
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../examples/cart_pole/cart_pole.html">
+     Cart-Pole Optimal Control
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../examples/brachistochrone/brachistochrone_tandem_phases.html">
+     Brachistochrone with tandem phases
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -311,6 +321,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="phases.html">
      Phases of a Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="analytic_phases.html">
+     Analytic Phases in Dymos
     </a>
    </li>
    <li class="toctree-l2">
@@ -427,8 +442,8 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../api/run_problem.html">
-     The Dymos run_problem function
+    <a class="reference internal" href="../../api/run_problem_function.html">
+     The run_problem function
     </a>
    </li>
    <li class="toctree-l2">
@@ -843,9 +858,7 @@ since Dymos doesn’t necessarily know the shape of ODE outputs until setup time
 <section id="interpolated-timeseries-outputs">
 <h2>Interpolated Timeseries Outputs<a class="headerlink" href="#interpolated-timeseries-outputs" title="Permalink to this headline">#</a></h2>
 <p>Sometimes a user may want to interpolate the results of a phase onto a different grid.  This is particularly
-useful in the context of tandem phases.  Additional timeseries may be added to a phase using the
-<code class="docutils literal notranslate"><span class="pre">add_timeseries</span></code> method.  By default all timeseries will provide times, states, controls, and
-parameters on the specified output grid.  Adding other variables is accomplished using the
+useful in the context of <a class="reference internal" href="../../examples/brachistochrone/brachistochrone_tandem_phases.html#examples-brachistochrone-tandem-phases"><span class="std std-ref">tandem phases</span></a>.  Additional timeseries may be added to a phase using the <code class="docutils literal notranslate"><span class="pre">add_timeseries</span></code> method.  By default all timeseries will provide times, states, controls, and parameters on the specified output grid.  Adding other variables is accomplished using the
 <code class="docutils literal notranslate"><span class="pre">timeseries</span></code> argument in the <code class="docutils literal notranslate"><span class="pre">add_timeseries_output</span></code> method.</p>
 <blockquote>
 <div><dl class="py method">

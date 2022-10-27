@@ -291,6 +291,16 @@ const thebe_selector_output = ".output, .cell_output"
      Water Rocket
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../cart_pole/cart_pole.html">
+     Cart-Pole Optimal Control
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../brachistochrone/brachistochrone_tandem_phases.html">
+     Brachistochrone with tandem phases
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -313,6 +323,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="../../features/phases/phases.html">
      Phases of a Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/analytic_phases.html">
+     Analytic Phases in Dymos
     </a>
    </li>
    <li class="toctree-l2">
@@ -429,8 +444,8 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../api/run_problem.html">
-     The Dymos run_problem function
+    <a class="reference internal" href="../../api/run_problem_function.html">
+     The run_problem function
     </a>
    </li>
    <li class="toctree-l2">
@@ -755,8 +770,8 @@ angle-of-attack history required to accelerate a supersonic interceptor
 from near ground level, Mach 0.4 to an altitude of 20 km and Mach 1.0.</p>
 <p><img alt="The free-body-diagram of the min-time-climb problem." src="../../_images/min_time_climb_fbd.png" /></p>
 <p>The vehicle dynamics are given by</p>
-<div class="amsmath math notranslate nohighlight" id="equation-b12a2e1f-275f-45d3-a19d-e1590068d4e9">
-<span class="eqno">(57)<a class="headerlink" href="#equation-b12a2e1f-275f-45d3-a19d-e1590068d4e9" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-1aaedffa-ca12-4dba-a4ec-e4fc8c9d0a7d">
+<span class="eqno">(57)<a class="headerlink" href="#equation-1aaedffa-ca12-4dba-a4ec-e4fc8c9d0a7d" title="Permalink to this equation">#</a></span>\[\begin{align}
   \frac{dv}{dt} &amp;= \frac{T}{m} \cos \alpha - \frac{D}{m} - g \sin \gamma \\
   \frac{d\gamma}{dt} &amp;= \frac{T}{m v} \sin \alpha + \frac{L}{m v} - \frac{g \cos \gamma}{v} \\
   \frac{dh}{dt} &amp;= v \sin \gamma \\
@@ -764,8 +779,8 @@ from near ground level, Mach 0.4 to an altitude of 20 km and Mach 1.0.</p>
   \frac{dm}{dt} &amp;= - \frac{T}{g I_{sp}}
 \end{align}\]</div>
 <p>The initial conditions are</p>
-<div class="amsmath math notranslate nohighlight" id="equation-4fb9e839-ec28-4fba-9a1f-d814ed47ddfa">
-<span class="eqno">(58)<a class="headerlink" href="#equation-4fb9e839-ec28-4fba-9a1f-d814ed47ddfa" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-ea2891cb-77aa-4a65-8fec-bdd9863e06bf">
+<span class="eqno">(58)<a class="headerlink" href="#equation-ea2891cb-77aa-4a65-8fec-bdd9863e06bf" title="Permalink to this equation">#</a></span>\[\begin{align}
   r_0 &amp;= 0 \rm{\,m} \\
   h_0 &amp;= 100 \rm{\,m} \\
   v_0 &amp;= 135.964 \rm{\,m/s} \\
@@ -773,8 +788,8 @@ from near ground level, Mach 0.4 to an altitude of 20 km and Mach 1.0.</p>
   m_0 &amp;= 19030.468 \rm{\,kg}
 \end{align}\]</div>
 <p>and the final conditions are</p>
-<div class="amsmath math notranslate nohighlight" id="equation-0c756c91-260e-4504-94c3-2212783c5b71">
-<span class="eqno">(59)<a class="headerlink" href="#equation-0c756c91-260e-4504-94c3-2212783c5b71" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-ff278eb0-b9ef-48e6-9929-6bf15f221501">
+<span class="eqno">(59)<a class="headerlink" href="#equation-ff278eb0-b9ef-48e6-9929-6bf15f221501" title="Permalink to this equation">#</a></span>\[\begin{align}
   h_f &amp;= 20000 \rm{\,m} \\
   M_f &amp;= 1.0 \\
   \gamma_0 &amp;= 0 \rm{\,deg}
@@ -1166,7 +1181,9 @@ INFO: checking out_of_order
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model viewer data has already been recorded for Driver.
-INFO: checking out_of_order
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO: checking out_of_order
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:check_config:checking out_of_order
@@ -1220,22 +1237,18 @@ INFO: checking out_of_order
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:check_config:checking auto_ivc_warnings
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Full total jacobian was computed 3 times, taking 0.155474 seconds.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Full total jacobian was computed 3 times, taking 0.173710 seconds.
 Total jacobian shape: (181, 191) 
-
-
-Jacobian shape: (181, 191)  ( 8.75% nonzero)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Jacobian shape: (181, 191)  ( 8.79% nonzero)
 FWD solves: 25   REV solves: 0
 Total colors vs. total size: 25 vs 191  (86.9% improvement)
 
 Sparsity computed using tolerance: 1e-25
-Time to compute sparsity: 0.155474 sec.
-Time to compute coloring: 0.172998 sec.
-Memory to compute coloring: 1.906250 MB.
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/pyoptsparse/pyOpt_optimization.py:234: UserWarning: The argument `type=` is deprecated. Use `varType` in the future.
-  warnings.warn(&quot;The argument `type=` is deprecated. Use `varType` in the future.&quot;)
+Time to compute sparsity: 0.173710 sec.
+Time to compute coloring: 0.197607 sec.
+Memory to compute coloring: 1.500000 MB.
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/openmdao/core/total_jac.py:1567: DerivativesWarning:Constraints or objectives [(&#39;traj.phases.phase0.timeseries.states:h&#39;, inds=[(0, 0)]), (&#39;traj.phases.phase0.timeseries.mach&#39;, inds=[(0, 0)])] cannot be impacted by the design variables of the problem.
@@ -1247,11 +1260,11 @@ Memory to compute coloring: 1.906250 MB.
 
     Solution: 
 --------------------------------------------------------------------------------
-    Total Time:                    8.8092
-       User Objective Time :       1.4188
-       User Sensitivity Time :     1.5877
-       Interface Time :            2.3605
-       Opt Solver Time:            3.4422
+    Total Time:                    9.6506
+       User Objective Time :       1.5036
+       User Sensitivity Time :     1.7124
+       Interface Time :            2.5756
+       Opt Solver Time:            3.8590
     Calls to Objective Function :     131
     Calls to Sens Function :          108
 
@@ -1724,6 +1737,14 @@ Memory to compute coloring: 1.906250 MB.
 --------------------------------------------------------------------------------
 </pre></div>
 </div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/tabulate/__init__.py:108: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  or (len(row) &gt;= 2 and row[1] == SEPARATING_LINE)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/openmdao/visualization/opt_report/opt_report.py:666: UserWarning: Attempting to set identical low and high ylims makes transformation singular; automatically expanding.
+  ax.set_ylim([ymin_plot, ymax_plot])
+</pre></div>
+</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulating trajectory traj
 </pre></div>
 </div>
@@ -1733,7 +1754,6 @@ Memory to compute coloring: 1.906250 MB.
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
 </pre></div>
 </div>
-<img alt="../../_images/min_time_climb_5_43.png" src="../../_images/min_time_climb_5_43.png" />
 </div>
 </div>
 <div class="cell docutils container">

@@ -286,6 +286,16 @@ const thebe_selector_output = ".output, .cell_output"
      Water Rocket
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/cart_pole/cart_pole.html">
+     Cart-Pole Optimal Control
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../examples/brachistochrone/brachistochrone_tandem_phases.html">
+     Brachistochrone with tandem phases
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -308,6 +318,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="../../../features/phases/phases.html">
      Phases of a Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../../features/phases/analytic_phases.html">
+     Analytic Phases in Dymos
     </a>
    </li>
    <li class="toctree-l2">
@@ -424,8 +439,8 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../../api/run_problem.html">
-     The Dymos run_problem function
+    <a class="reference internal" href="../../../api/run_problem_function.html">
+     The run_problem function
     </a>
    </li>
    <li class="toctree-l2">
@@ -611,6 +626,7 @@ title="Open an issue"
 
 <span class="kn">from</span> <span class="nn">.options</span> <span class="kn">import</span> <span class="n">LinkageOptionsDictionary</span>
 <span class="kn">from</span> <span class="nn">.phase_linkage_comp</span> <span class="kn">import</span> <span class="n">PhaseLinkageComp</span>
+<span class="kn">from</span> <span class="nn">..phase.analytic_phase</span> <span class="kn">import</span> <span class="n">AnalyticPhase</span>
 <span class="kn">from</span> <span class="nn">..phase.options</span> <span class="kn">import</span> <span class="n">TrajParameterOptionsDictionary</span>
 <span class="kn">from</span> <span class="nn">..transcriptions.common</span> <span class="kn">import</span> <span class="n">ParameterComp</span>
 <span class="kn">from</span> <span class="nn">..utils.misc</span> <span class="kn">import</span> <span class="n">get_rate_units</span><span class="p">,</span> <span class="n">_unspecified</span>
@@ -893,6 +909,12 @@ title="Open an issue"
 
     <span class="k">def</span> <span class="nf">_setup_linkages</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">has_linkage_constraints</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">err_template</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{traj}</span><span class="s1">: Phase `</span><span class="si">{phase1}</span><span class="s1">` links variable `</span><span class="si">{var1}</span><span class="s1">` to phase &#39;</span> \
+                       <span class="s1">&#39;`</span><span class="si">{phase2}</span><span class="s1">` state variable `</span><span class="si">{var2}</span><span class="s1">` by connection, but phase `</span><span class="si">{phase2}</span><span class="s1">` &#39;</span> \
+                       <span class="s1">&#39;is an AnalyticPhase and does not support linking initial state &#39;</span> \
+                       <span class="s1">&#39;values with option `connected=True`.&#39;</span>
+
         <span class="k">for</span> <span class="n">pair</span><span class="p">,</span> <span class="n">var_dict</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_linkages</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
             <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">pair</span><span class="p">:</span>
@@ -907,13 +929,23 @@ title="Open an issue"
 
                 <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;connected&#39;</span><span class="p">]:</span>
                     <span class="k">if</span> <span class="n">var2</span> <span class="o">==</span> <span class="s1">&#39;time&#39;</span><span class="p">:</span>
-                        <span class="n">phase2</span><span class="o">.</span><span class="n">set_time_options</span><span class="p">(</span><span class="n">input_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">phase2</span><span class="o">.</span><span class="n">set_time_options</span><span class="p">(</span><span class="n">input_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fix_initial</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                     <span class="k">elif</span> <span class="n">var2</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
-                        <span class="n">phase2</span><span class="o">.</span><span class="n">set_time_options</span><span class="p">(</span><span class="n">input_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">phase2</span><span class="o">.</span><span class="n">set_time_options</span><span class="p">(</span><span class="n">input_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fix_initial</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                         <span class="k">for</span> <span class="n">state_name</span> <span class="ow">in</span> <span class="n">phase2</span><span class="o">.</span><span class="n">state_options</span><span class="p">:</span>
-                            <span class="n">phase2</span><span class="o">.</span><span class="n">set_state_options</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">conected_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phase2</span><span class="p">,</span> <span class="n">AnalyticPhase</span><span class="p">):</span>
+                                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">err_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">traj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pathname</span><span class="p">,</span> <span class="n">phase1</span><span class="o">=</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                                       <span class="n">phase2</span><span class="o">=</span><span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">var1</span><span class="o">=</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="o">=</span><span class="n">var2</span><span class="p">))</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">phase2</span><span class="o">.</span><span class="n">set_state_options</span><span class="p">(</span><span class="n">state_name</span><span class="p">,</span> <span class="n">input_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fix_initial</span><span class="o">=</span><span class="n">_unspecified</span><span class="p">)</span>
                     <span class="k">elif</span> <span class="n">var2</span> <span class="ow">in</span> <span class="n">phase2</span><span class="o">.</span><span class="n">state_options</span><span class="p">:</span>
-                        <span class="n">phase2</span><span class="o">.</span><span class="n">set_state_options</span><span class="p">(</span><span class="n">var2</span><span class="p">,</span> <span class="n">connected_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phase2</span><span class="p">,</span> <span class="n">AnalyticPhase</span><span class="p">):</span>
+                            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">err_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">traj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pathname</span><span class="p">,</span> <span class="n">phase1</span><span class="o">=</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                                   <span class="n">phase2</span><span class="o">=</span><span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">var1</span><span class="o">=</span><span class="n">var1</span><span class="p">,</span> <span class="n">var2</span><span class="o">=</span><span class="n">var2</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">phase2</span><span class="o">.</span><span class="n">set_state_options</span><span class="p">(</span><span class="n">var2</span><span class="p">,</span> <span class="n">input_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fix_initial</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">var2</span> <span class="ow">in</span> <span class="n">phase2</span><span class="o">.</span><span class="n">parameter_options</span><span class="p">:</span>
+                        <span class="n">phase2</span><span class="o">.</span><span class="n">set_parameter_options</span><span class="p">(</span><span class="n">var2</span><span class="p">,</span> <span class="n">opt</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">has_linkage_constraints</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1001,7 +1033,7 @@ title="Open an issue"
                 <span class="c1"># Find the reason</span>
                 <span class="k">if</span> <span class="n">targets</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">reason</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Option `targets=None` but no phase in the trajectory has a parameter named `</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">`.&#39;</span>
-                <span class="k">elif</span> <span class="nb">all</span><span class="p">([</span><span class="n">t</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">targets</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span> <span class="ow">and</span> <span class="nb">set</span><span class="p">(</span><span class="n">targets</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="k">elif</span> <span class="nb">all</span><span class="p">([</span><span class="n">t</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">targets</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span> <span class="ow">and</span> <span class="n">targets</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                     <span class="n">reason</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Option `targets` is a dictionary keyed by phase name but target for each phase is None.&#39;</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No target was found for trajectory parameter `</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">` in any phase.</span><span class="se">\n</span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -1015,7 +1047,7 @@ title="Open an issue"
             <span class="k">if</span> <span class="n">options</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="n">_unspecified</span><span class="p">:</span>
                 <span class="n">tgt_units_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">tgt_units</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tgt_units_set</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">options</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tgt_units_set</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">options</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tgt_units_set</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Parameter </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> in Trajectory </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pathname</span><span class="si">}</span><span class="s1"> is connected to &#39;</span>
                                <span class="sa">f</span><span class="s1">&#39;targets in multiple phases that have different units. You must &#39;</span>
@@ -1045,7 +1077,7 @@ title="Open an issue"
 <span class="sd">        Called during configure if we are under MPI. Loops over all phases and broadcasts the shape</span>
 <span class="sd">        and units options to all procs for all dymos variables.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">phase</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">phase</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">all_dicts</span> <span class="o">=</span> <span class="p">[</span><span class="n">phase</span><span class="o">.</span><span class="n">state_options</span><span class="p">,</span> <span class="n">phase</span><span class="o">.</span><span class="n">control_options</span><span class="p">,</span> <span class="n">phase</span><span class="o">.</span><span class="n">parameter_options</span><span class="p">,</span>
                          <span class="n">phase</span><span class="o">.</span><span class="n">polynomial_control_options</span><span class="p">]</span>
 
@@ -1054,7 +1086,7 @@ title="Open an issue"
 
                     <span class="n">all_ranks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm</span><span class="o">.</span><span class="n">allgather</span><span class="p">(</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">])</span>
                     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">all_ranks</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">_unspecified</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="n">item</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="kc">None</span><span class="p">,</span> <span class="n">_unspecified</span><span class="p">}:</span>
                             <span class="n">options</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span>
                             <span class="k">break</span>
                     <span class="k">else</span><span class="p">:</span>
@@ -1090,8 +1122,6 @@ title="Open an issue"
         <span class="n">phase_name_b</span> <span class="o">=</span> <span class="n">linkage_options</span><span class="p">[</span><span class="s1">&#39;phase_b&#39;</span><span class="p">]</span>
         <span class="n">var_a</span> <span class="o">=</span> <span class="n">linkage_options</span><span class="p">[</span><span class="s1">&#39;var_a&#39;</span><span class="p">]</span>
         <span class="n">var_b</span> <span class="o">=</span> <span class="n">linkage_options</span><span class="p">[</span><span class="s1">&#39;var_b&#39;</span><span class="p">]</span>
-        <span class="n">loc_a</span> <span class="o">=</span> <span class="n">linkage_options</span><span class="p">[</span><span class="s1">&#39;loc_a&#39;</span><span class="p">]</span>
-        <span class="n">loc_b</span> <span class="o">=</span> <span class="n">linkage_options</span><span class="p">[</span><span class="s1">&#39;loc_b&#39;</span><span class="p">]</span>
 
         <span class="n">info_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Error in linking </span><span class="si">{</span><span class="n">var_a</span><span class="si">}</span><span class="s1"> from </span><span class="si">{</span><span class="n">phase_name_a</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">var_b</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="n">phase_name_b</span><span class="si">}</span><span class="s1">&#39;</span>
 
@@ -1145,17 +1175,18 @@ title="Open an issue"
                 <span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_rate_units</span><span class="p">(</span><span class="n">control_units</span><span class="p">,</span> <span class="n">time_units</span><span class="p">,</span> <span class="n">deriv</span><span class="o">=</span><span class="n">deriv</span><span class="p">)</span>
                 <span class="n">shapes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">phases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">polynomial_control_options</span><span class="p">[</span><span class="n">control_name</span><span class="p">][</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span>
             <span class="k">elif</span> <span class="n">classes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;parameter&#39;</span><span class="p">:</span>
-                <span class="n">sources</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;timeseries.parameters:</span><span class="si">{</span><span class="nb">vars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">sources</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;parameter_vals:</span><span class="si">{</span><span class="nb">vars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
                 <span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">phases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">parameter_options</span><span class="p">[</span><span class="nb">vars</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="s1">&#39;units&#39;</span><span class="p">]</span>
                 <span class="n">shapes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">phases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">parameter_options</span><span class="p">[</span><span class="nb">vars</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">rhs_source</span> <span class="o">=</span> <span class="n">phases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;transcription&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_rhs_source</span>
                 <span class="n">sources</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">rhs_source</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="nb">vars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">shapes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_source_metadata</span><span class="p">(</span><span class="n">phases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_get_subsystem</span><span class="p">(</span><span class="n">rhs_source</span><span class="p">),</span>
-                                                              <span class="nb">vars</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">user_units</span><span class="o">=</span><span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
-                                                              <span class="n">user_shape</span><span class="o">=</span><span class="n">_unspecified</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">meta</span> <span class="o">=</span> <span class="n">get_source_metadata</span><span class="p">(</span><span class="n">phases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">_get_subsystem</span><span class="p">(</span><span class="n">rhs_source</span><span class="p">),</span> <span class="nb">vars</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">user_units</span><span class="o">=</span><span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                                               <span class="n">user_shape</span><span class="o">=</span><span class="n">_unspecified</span><span class="p">)</span>
+                    <span class="n">shapes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;shape&#39;</span><span class="p">]</span>
+                    <span class="n">units</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">meta</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">info_str</span><span class="si">}</span><span class="s1">: Unable to find variable </span><span class="se">\&#39;</span><span class="si">{</span><span class="nb">vars</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1"> in &#39;</span>
                                        <span class="sa">f</span><span class="s1">&#39;phase </span><span class="se">\&#39;</span><span class="si">{</span><span class="n">phases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">pathname</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1"> or its ODE.&#39;</span><span class="p">)</span>
 
@@ -1201,7 +1232,7 @@ title="Open an issue"
                                                 <span class="n">var_b</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">loc_a</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;loc_a&#39;</span><span class="p">],</span>
                                                 <span class="n">loc_b</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;loc_b&#39;</span><span class="p">],</span> <span class="n">sign_a</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;sign_a&#39;</span><span class="p">],</span>
                                                 <span class="n">sign_b</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;sign_b&#39;</span><span class="p">])</span>
-                    <span class="k">for</span> <span class="n">state_name</span><span class="p">,</span> <span class="n">state_options</span> <span class="ow">in</span> <span class="n">phase_b</span><span class="o">.</span><span class="n">state_options</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">state_name</span> <span class="ow">in</span> <span class="n">phase_b</span><span class="o">.</span><span class="n">state_options</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">add_linkage_constraint</span><span class="p">(</span><span class="n">phase_name_a</span><span class="p">,</span> <span class="n">phase_name_b</span><span class="p">,</span> <span class="n">var_a</span><span class="o">=</span><span class="n">state_name</span><span class="p">,</span>
                                                     <span class="n">var_b</span><span class="o">=</span><span class="n">state_name</span><span class="p">,</span> <span class="n">loc_a</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;loc_a&#39;</span><span class="p">],</span>
                                                     <span class="n">loc_b</span><span class="o">=</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;loc_b&#39;</span><span class="p">],</span>
@@ -1336,6 +1367,8 @@ title="Open an issue"
                     <span class="n">fixed_a</span> <span class="o">=</span> <span class="n">phase_a</span><span class="o">.</span><span class="n">is_control_fixed</span><span class="p">(</span><span class="n">var_a</span><span class="p">,</span> <span class="n">loc_a</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">class_a</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;input_polynomial_control&#39;</span><span class="p">,</span> <span class="s1">&#39;indep_polynomial_control&#39;</span><span class="p">}:</span>
                     <span class="n">fixed_a</span> <span class="o">=</span> <span class="n">phase_a</span><span class="o">.</span><span class="n">is_polynomial_control_fixed</span><span class="p">(</span><span class="n">var_a</span><span class="p">,</span> <span class="n">loc_a</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">class_a</span> <span class="o">==</span> <span class="s1">&#39;parameter&#39;</span><span class="p">:</span>
+                    <span class="n">fixed_a</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">phase_a</span><span class="o">.</span><span class="n">parameter_options</span><span class="p">[</span><span class="n">var_a</span><span class="p">][</span><span class="s1">&#39;opt&#39;</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">fixed_a</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1347,6 +1380,8 @@ title="Open an issue"
                     <span class="n">fixed_b</span> <span class="o">=</span> <span class="n">phase_b</span><span class="o">.</span><span class="n">is_control_fixed</span><span class="p">(</span><span class="n">var_b</span><span class="p">,</span> <span class="n">loc_b</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">class_b</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;input_polynomial_control&#39;</span><span class="p">,</span> <span class="s1">&#39;indep_polynomial_control&#39;</span><span class="p">}:</span>
                     <span class="n">fixed_b</span> <span class="o">=</span> <span class="n">phase_b</span><span class="o">.</span><span class="n">is_polynomial_control_fixed</span><span class="p">(</span><span class="n">var_b</span><span class="p">,</span> <span class="n">loc_b</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">class_a</span> <span class="o">==</span> <span class="s1">&#39;parameter&#39;</span><span class="p">:</span>
+                    <span class="n">fixed_a</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">phase_b</span><span class="o">.</span><span class="n">parameter_options</span><span class="p">[</span><span class="n">var_a</span><span class="p">][</span><span class="s1">&#39;opt&#39;</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">fixed_b</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1366,11 +1401,16 @@ title="Open an issue"
                         <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase_name_a</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">src_a</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase_name_b</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">tgt_b</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                                      <span class="n">src_indices</span><span class="o">=</span><span class="n">om</span><span class="o">.</span><span class="n">slicer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="n">class_b</span> <span class="o">==</span> <span class="s1">&#39;parameter&#39;</span><span class="p">:</span>
+                        <span class="n">tgt_b</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;parameters:</span><span class="si">{</span><span class="n">var_b</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase_name_a</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">src_a</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">phase_name_b</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">tgt_b</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                     <span class="n">src_indices</span><span class="o">=</span><span class="n">om</span><span class="o">.</span><span class="n">slicer</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Could not create connection linkage from phase `</span><span class="si">{</span><span class="n">phase_name_a</span><span class="si">}</span><span class="s1">` &#39;</span> \
                               <span class="sa">f</span><span class="s1">&#39;variable `</span><span class="si">{</span><span class="n">var_a</span><span class="si">}</span><span class="s1">` to phase `</span><span class="si">{</span><span class="n">phase_name_b</span><span class="si">}</span><span class="s1">` variable `</span><span class="si">{</span><span class="n">var_b</span><span class="si">}</span><span class="s1">`. &#39;</span> \
-                              <span class="sa">f</span><span class="s1">&#39;For direct connections, the target variable must be `time` or a &#39;</span> \
-                              <span class="sa">f</span><span class="s1">&#39;state in the phase.</span><span class="se">\n</span><span class="s1">Either remove the linkage or specify &#39;</span> \
+                              <span class="sa">f</span><span class="s1">&#39;For direct connections, the target variable must be `time`, a &#39;</span> \
+                              <span class="sa">f</span><span class="s1">&#39;state, or a parameter in the phase.</span><span class="se">\n</span><span class="s1">Either remove the linkage or specify &#39;</span> \
                               <span class="sa">f</span><span class="s1">&#39;`connected=False` to enforce it via an optimization constraint.&#39;</span>
                         <span class="k">raise</span> <span class="n">om</span><span class="o">.</span><span class="n">OpenMDAOWarning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
                     <span class="n">_print_on_rank</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">indent</span> <span class="o">*</span> <span class="mi">2</span><span class="si">}{</span><span class="n">prefixed_a</span><span class="si">:</span><span class="s1">&lt;</span><span class="si">{</span><span class="n">padding_a</span><span class="si">}</span><span class="s1">s</span><span class="si">}</span><span class="s1"> [</span><span class="si">{</span><span class="n">loc_a</span><span class="si">}{</span><span class="n">str_fixed_a</span><span class="si">}</span><span class="s1">] -&gt;  &#39;</span>
@@ -1601,7 +1641,6 @@ title="Open an issue"
         <span class="c1"># Resolve linkage pairs from the phases sequence</span>
         <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">tee</span><span class="p">(</span><span class="n">phases</span><span class="p">)</span>
         <span class="nb">next</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">phase_pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">_locs</span> <span class="o">=</span> <span class="n">num_links</span> <span class="o">*</span> <span class="n">locs</span>
@@ -1614,9 +1653,8 @@ title="Open an issue"
                              <span class="sa">f</span><span class="s1">&#39;the number of phases specified.  There are </span><span class="si">{</span><span class="n">num_links</span><span class="si">}</span><span class="s1"> phase pairs &#39;</span>
                              <span class="sa">f</span><span class="s1">&#39;but </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span><span class="si">}</span><span class="s1"> location tuples specified.&#39;</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">phase_pairs</span><span class="p">)):</span>
-            <span class="n">phase_name_a</span><span class="p">,</span> <span class="n">phase_name_b</span> <span class="o">=</span> <span class="n">phase_pairs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">loc_a</span><span class="p">,</span> <span class="n">loc_b</span> <span class="o">=</span> <span class="n">_locs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">phase_name_a</span><span class="p">,</span> <span class="n">phase_name_b</span><span class="p">,</span> <span class="n">loctup</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">_locs</span><span class="p">):</span>
+            <span class="n">loc_a</span><span class="p">,</span> <span class="n">loc_b</span> <span class="o">=</span> <span class="n">loctup</span>
             <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">_vars</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_linkage_constraint</span><span class="p">(</span><span class="n">phase_a</span><span class="o">=</span><span class="n">phase_name_a</span><span class="p">,</span> <span class="n">phase_b</span><span class="o">=</span><span class="n">phase_name_b</span><span class="p">,</span>
                                             <span class="n">var_a</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">var_b</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">loc_a</span><span class="o">=</span><span class="n">loc_a</span><span class="p">,</span> <span class="n">loc_b</span><span class="o">=</span><span class="n">loc_b</span><span class="p">,</span>
@@ -1741,10 +1779,16 @@ title="Open an issue"
         <span class="n">sim_traj</span> <span class="o">=</span> <span class="n">Trajectory</span><span class="p">(</span><span class="n">sim_mode</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">phs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">phs</span><span class="o">.</span><span class="n">simulate_options</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+
             <span class="n">sim_phs</span> <span class="o">=</span> <span class="n">phs</span><span class="o">.</span><span class="n">get_simulation_phase</span><span class="p">(</span><span class="n">times_per_seg</span><span class="o">=</span><span class="n">times_per_seg</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
                                                <span class="n">atol</span><span class="o">=</span><span class="n">atol</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="n">rtol</span><span class="p">,</span> <span class="n">first_step</span><span class="o">=</span><span class="n">first_step</span><span class="p">,</span>
                                                <span class="n">max_step</span><span class="o">=</span><span class="n">max_step</span><span class="p">,</span> <span class="n">reports</span><span class="o">=</span><span class="n">reports</span><span class="p">)</span>
             <span class="n">sim_traj</span><span class="o">.</span><span class="n">add_phase</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">sim_phs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sim_traj</span><span class="o">.</span><span class="n">_phases</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Trajectory `</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pathname</span><span class="si">}</span><span class="s1">` has no phases that support simulation.&#39;</span><span class="p">)</span>
 
         <span class="n">sim_traj</span><span class="o">.</span><span class="n">parameter_options</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_options</span><span class="p">)</span>
 
@@ -1764,35 +1808,17 @@ title="Open an issue"
         <span class="n">sim_prob</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
 
         <span class="c1"># Assign trajectory parameter values</span>
-        <span class="n">param_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_options</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
-        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">param_names</span><span class="p">:</span>
-            <span class="n">prom_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">.parameters:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
-            <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source</span><span class="p">(</span><span class="n">prom_path</span><span class="p">)</span>
-
-            <span class="c1"># We use this private function to grab the correctly sized variable from the</span>
-            <span class="c1"># auto_ivc source.</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_abs_get_val</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;nonlinear&#39;</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">from_root</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_options</span><span class="p">:</span>
             <span class="n">sim_prob_prom_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">traj_name</span><span class="si">}</span><span class="s1">.parameters:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
-            <span class="n">sim_prob</span><span class="p">[</span><span class="n">sim_prob_prom_path</span><span class="p">][</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="n">sim_prob</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="n">sim_prob_prom_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_val</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;parameters:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
 
         <span class="k">for</span> <span class="n">phase_name</span><span class="p">,</span> <span class="n">phs</span> <span class="ow">in</span> <span class="n">sim_traj</span><span class="o">.</span><span class="n">_phases</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">skip_params</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">param_names</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">param_names</span><span class="p">:</span>
-                <span class="n">targets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter_options</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;targets&#39;</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">targets</span> <span class="ow">and</span> <span class="n">phase_name</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
-                    <span class="n">targets_phase</span> <span class="o">=</span> <span class="n">targets</span><span class="p">[</span><span class="n">phase_name</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">targets_phase</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">targets_phase</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                            <span class="n">targets_phase</span> <span class="o">=</span> <span class="p">[</span><span class="n">targets_phase</span><span class="p">]</span>
-                        <span class="n">skip_params</span> <span class="o">=</span> <span class="n">skip_params</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">targets_phase</span><span class="p">)</span>
-
             <span class="n">phs</span><span class="o">.</span><span class="n">initialize_values_from_phase</span><span class="p">(</span><span class="n">sim_prob</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_phases</span><span class="p">[</span><span class="n">phase_name</span><span class="p">],</span>
-                                             <span class="n">phase_path</span><span class="o">=</span><span class="n">traj_name</span><span class="p">,</span>
-                                             <span class="n">skip_params</span><span class="o">=</span><span class="n">skip_params</span><span class="p">)</span>
+                                             <span class="n">phase_path</span><span class="o">=</span><span class="n">traj_name</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Simulating trajectory </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pathname</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Simulating trajectory </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pathname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">sim_prob</span><span class="o">.</span><span class="n">run_model</span><span class="p">(</span><span class="n">case_prefix</span><span class="o">=</span><span class="n">case_prefix</span><span class="p">,</span> <span class="n">reset_iter_counts</span><span class="o">=</span><span class="n">reset_iter_counts</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done simulating trajectory </span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pathname</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Done simulating trajectory </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">pathname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">record_file</span><span class="p">:</span>
             <span class="n">_case_prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="k">if</span> <span class="n">case_prefix</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">case_prefix</span><span class="si">}</span><span class="s1">_&#39;</span>
             <span class="n">sim_prob</span><span class="o">.</span><span class="n">record</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">_case_prefix</span><span class="si">}</span><span class="s1">final&#39;</span><span class="p">)</span>

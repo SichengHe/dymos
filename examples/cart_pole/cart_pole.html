@@ -1,0 +1,1451 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Cart-Pole Optimal Control &#8212; Dymos</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/myfile.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Brachistochrone with tandem phases" href="../brachistochrone/brachistochrone_tandem_phases.html" />
+    <link rel="prev" title="Water Rocket" href="../water_rocket/water_rocket.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../../_static/dymos_logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Dymos</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../index.html">
+                    Multidisciplinary Optimal Control Library
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Installation
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../installation.html">
+   Installing Dymos
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Getting Started
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../getting_started/optimal_control.html">
+   Optimal Control
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../getting_started/transcriptions.html">
+   Optimal Control Transcriptions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../getting_started/defining_odes.html">
+   Defining ODEs
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../getting_started/collocation.html">
+   What is collocation?
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../getting_started/intro_to_dymos/intro_ivp.html">
+   Modeling Dynamic Systems with Dymos
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../getting_started/intro_to_dymos/intro_segments.html">
+   Segments of Phases
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Examples and Tutorials
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="../examples.html">
+   Dymos by Example
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2">
+    <a class="reference internal" href="../brachistochrone/brachistochrone.html">
+     The Brachistochrone
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../brachistochrone/brachistochrone_upstream_init_duration_states.html">
+     The Brachistochrone with externally-sourced initial state values
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../vanderpol/vanderpol.html">
+     The Van der Pol Oscillator
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../balanced_field/balanced_field.html">
+     Aircraft Balanced Field Length Calculation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../balanced_field/balanced_field_funccomp.html">
+     Balanced Field Length using OpenMDAO’s Function Wrapping Components.
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../bryson_denham/bryson_denham.html">
+     The Bryson-Denham Problem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../commercial_aircraft/commercial_aircraft.html">
+     Commercial Aircraft Range Maximization by Differential Inclusion
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../double_integrator/double_integrator.html">
+     Double Integrator
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../hypersensitive/hypersensitive.html">
+     Hyper-Sensitive Problem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../finite_burn_orbit_raise/finite_burn_orbit_raise.html">
+     Two-Burn Orbit Raise
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../length_constrained_brachistochrone/length_constrained_brachistochrone.html">
+     The Length-Constrained Brachistochrone
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../min_time_climb/min_time_climb.html">
+     Supersonic Interceptor Minimum Time Climb
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../mountain_car/mountain_car.html">
+     The Mountain Car Problem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../multi_phase_cannonball/multi_phase_cannonball.html">
+     Multi-Phase Cannonball
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../multibranch_trajectory/multibranch_trajectory.html">
+     Multibranch Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../racecar/racecar.html">
+     Race car Lap Simulation
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../reentry/reentry.html">
+     Single-Phase Space Shuttle Reentry
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../ssto_earth/ssto_earth.html">
+     SSTO Earth Launch
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../ssto_moon_linear_tangent/ssto_moon_linear_tangent.html">
+     SSTO Lunar Ascent with Linear Tangent Guidance
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../ssto_moon_polynomial_controls/ssto_moon_polynomial_controls.html">
+     SSTO Lunar Ascent with Polynomial Controls
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../robertson_problem/robertson_problem.html">
+     The Robertson Problem
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../water_rocket/water_rocket.html">
+     Water Rocket
+    </a>
+   </li>
+   <li class="toctree-l2 current active">
+    <a class="current reference internal" href="#">
+     Cart-Pole Optimal Control
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../brachistochrone/brachistochrone_tandem_phases.html">
+     Brachistochrone with tandem phases
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Feature Reference
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../features/phases/phases_list.html">
+   Phases
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/phases.html">
+     Phases of a Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/analytic_phases.html">
+     Analytic Phases in Dymos
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/segments.html">
+     Segments
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/variables.html">
+     Variables
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/constraints.html">
+     Constraints
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/objective.html">
+     Objective
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/timeseries.html">
+     Timeseries Outputs
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../features/trajectories/trajectories.html">
+   Organizing Phases into Trajectories
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../features/exploiting_sparsity.html">
+   Exploiting Sparsity for Faster Derivative Calculation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../features/plotting.html">
+   Plotting Timeseries
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Frequently Asked Questions
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../faq/faq.html">
+   Frequently Asked Questions
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+  <label for="toctree-checkbox-3">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq/add_ode_output_to_timeseries.html">
+     How do I add an ODE output to the timeseries outputs?
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq/connect_scalar_parameters_to_ode.html">
+     How do I connect a scalar input to the ODE?
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq/upstream_analysis.html">
+     How do I connect the outputs of an upstream analysis as inputs to Dymos?
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq/downstream_analysis.html">
+     How do I connect the outputs of Dymos to a downstream analysis?
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq/tandem_phases.html">
+     How do I run two phases parallel-in-time?
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq/use_partial_coloring.html">
+     How can I more efficiently use finite-differenced components in the ODE?
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../faq/debugging.html">
+     How can I debug models when things go wrong?
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Dymos API Reference
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../../api/api.html">
+   Dymos Reference API
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+  <label for="toctree-checkbox-4">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/run_problem_function.html">
+     The run_problem function
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/phase_api.html">
+     The Phase API
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/transcriptions_api.html">
+     The Transcriptions API
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../api/trajectory_api.html">
+     The Trajectory API
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Contributing
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../../contributing/contributing.html">
+   Contributing to Dymos
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/OpenMDAO/dymos/master?urlpath=tree/docs/examples/cart_pole/cart_pole.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://colab.research.google.com/github/OpenMDAO/dymos/blob/master/docs/examples/cart_pole/cart_pole.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Colab"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../../_static/images/logo_colab.png">
+  </span>
+<span class="headerbtn__text-container">Colab</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/OpenMDAO/dymos"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/OpenMDAO/dymos/issues/new?title=Issue%20on%20page%20%2Fexamples/cart_pole/cart_pole.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../../_sources/examples/cart_pole/cart_pole.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#trajectory-optimization-problem">
+   Trajectory Optimization Problem
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dynamics">
+     Dynamics
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#initial-and-terminal-conditions">
+     Initial and terminal conditions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#parameters">
+     Parameters
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#implementing-the-ode">
+   Implementing the ODE
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#building-and-running-the-problem">
+   Building and running the problem
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Cart-Pole Optimal Control</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#trajectory-optimization-problem">
+   Trajectory Optimization Problem
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#dynamics">
+     Dynamics
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#initial-and-terminal-conditions">
+     Initial and terminal conditions
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#parameters">
+     Parameters
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#implementing-the-ode">
+   Implementing the ODE
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#building-and-running-the-problem">
+   Building and running the problem
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#references">
+   References
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <div class="cell tag_active-ipynb tag_remove-input tag_remove-output docutils container">
+</div>
+<section class="tex2jax_ignore mathjax_ignore" id="cart-pole-optimal-control">
+<span id="examples-cart-pole"></span><h1>Cart-Pole Optimal Control<a class="headerlink" href="#cart-pole-optimal-control" title="Permalink to this headline">#</a></h1>
+<p>This example is authored by Shugo Kaneko and Bernardo Pacini of the <a class="reference external" href="https://mdolab.engin.umich.edu/">MDO Lab</a>.
+The cart-pole problem is an instructional case described in <em>An introduction to trajectory optimization: How to do your own direct collocation</em> <span id="id1">[<a class="reference internal" href="#id53" title="Matthew Kelly. An introduction to trajectory optimization: How to do your own direct collocation. SIAM Review, 59(4):849–904, 2017. doi:10.1137/16M1062569.">Kel17</a>]</span>, and is adapted to work within Dymos.
+We consider a pole that can rotate freely attached to a cart, on which we can exert an external force (control input) in the <span class="math notranslate nohighlight">\(x\)</span>-direction.</p>
+<p>Our goal is to bring the cart-pole system from an initial state to a terminal state with minimum control efforts.
+The initial state is the stable stationary point (the cart at a stop with the pole vertically down), and the terminal state is the unstable stationary state (the cart at a stop but with the pole vertically up).
+Friction force is ignored to simplify the problem.</p>
+<p><img alt="Cart-pole optimal control from the initial state to the terminal state." src="../../_images/cartpole-ic-tc.png" /></p>
+<section id="trajectory-optimization-problem">
+<h2>Trajectory Optimization Problem<a class="headerlink" href="#trajectory-optimization-problem" title="Permalink to this headline">#</a></h2>
+<p>We use the following quadratic objective function to approximately minimize the total control effort:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-1be0a362-dade-46de-9e81-2028d257e53f">
+<span class="eqno">(81)<a class="headerlink" href="#equation-1be0a362-dade-46de-9e81-2028d257e53f" title="Permalink to this equation">#</a></span>\[\begin{equation}
+    J = \int_{t_0}^{t_f} F(t)^2 dt ~~ \rightarrow ~ \min
+\end{equation}\]</div>
+<p>where <span class="math notranslate nohighlight">\(F(t)\)</span> is the external force, <span class="math notranslate nohighlight">\(t_0\)</span> is the initial time, and <span class="math notranslate nohighlight">\(t_f\)</span> is the final time.</p>
+<section id="dynamics">
+<h3>Dynamics<a class="headerlink" href="#dynamics" title="Permalink to this headline">#</a></h3>
+<p>The equations of motion of the cart-pole system are given by</p>
+<div class="amsmath math notranslate nohighlight" id="equation-13f1c5a9-e44e-45eb-903d-f0aa7bbe3748">
+<span class="eqno">(82)<a class="headerlink" href="#equation-13f1c5a9-e44e-45eb-903d-f0aa7bbe3748" title="Permalink to this equation">#</a></span>\[\begin{equation}
+    \begin{bmatrix}
+        \ddot{x} \\ \ddot{\theta}
+    \end{bmatrix} =
+    \begin{bmatrix}
+        \cos \theta &amp; \ell  \\ m_1 + m_2 &amp; m_2 \ell \cos \theta
+    \end{bmatrix}^{-1}
+    \begin{bmatrix}
+        -g \sin \theta \\ F + m_2 \ell \dot{\theta}^2 \sin \theta
+    \end{bmatrix}
+\end{equation}\]</div>
+<p>where <span class="math notranslate nohighlight">\(x\)</span> is the cart location, <span class="math notranslate nohighlight">\(\theta\)</span> is the pole angle, <span class="math notranslate nohighlight">\(m_1\)</span> is the cart mass, <span class="math notranslate nohighlight">\(m_2\)</span> is the pole mass, and <span class="math notranslate nohighlight">\(\ell\)</span> is the pole length.</p>
+<p><img alt="Schematic of the cart-pole system." src="../../_images/cartpole-dynamics.png" /></p>
+<p>Now, we need to convert the equations of motion, which are a second-order ODE, to a first-order ODE.
+To do so, we define our state vector to be <span class="math notranslate nohighlight">\(X = [x, \dot{x}, \theta, \dot{\theta}]^T\)</span>.
+We also add an “energy” state <span class="math notranslate nohighlight">\(e\)</span> and set <span class="math notranslate nohighlight">\(\dot{e} = F^2\)</span> to keep track of the accumulated control input.
+By setting setting <span class="math notranslate nohighlight">\(e_0 = 0\)</span>, the objective function is equal to the final value of the state <span class="math notranslate nohighlight">\(e\)</span>:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-6f292ee7-fce8-49bc-9a53-8c67b82c40d7">
+<span class="eqno">(83)<a class="headerlink" href="#equation-6f292ee7-fce8-49bc-9a53-8c67b82c40d7" title="Permalink to this equation">#</a></span>\[\begin{equation}
+    J = \int_{t_0}^{t_f} \dot{e} ~dt = e_f
+\end{equation}\]</div>
+<p>To summarize, the ODE for the cart-pole system is given by</p>
+<div class="amsmath math notranslate nohighlight" id="equation-b1ffbb83-470c-43ae-816e-ee3a713b3846">
+<span class="eqno">(84)<a class="headerlink" href="#equation-b1ffbb83-470c-43ae-816e-ee3a713b3846" title="Permalink to this equation">#</a></span>\[\begin{equation}
+    \begin{bmatrix}
+        \dot{x} \\ \dot{\theta} \\ \ddot{x} \\ \ddot{\theta} \\ \dot{e} 
+    \end{bmatrix} =
+    f \left(
+        \begin{bmatrix}
+        x \\ \theta \\ \dot{x} \\ \dot{\theta} \\ e 
+    \end{bmatrix}
+    \right)=
+    \begin{bmatrix}
+        \dot{x}  \\
+        \dot{\theta} \\
+        \frac{-m_2 g \sin \theta \cos \theta - (F + m_2 \ell \dot{\theta}^2 \sin \theta)}{m_2 \cos^2 \theta - (m_1 + m_2)} \\
+        \frac{(m_1 + m_2) g \sin \theta + \cos \theta (F + m_1 \ell \dot{\theta}^2 \sin \theta)}{m_2 \ell \cos^2 \theta - (m_1 + m_2) \ell} \\ 
+        F^2 \\ 
+    \end{bmatrix}
+\end{equation}\]</div>
+</section>
+<section id="initial-and-terminal-conditions">
+<h3>Initial and terminal conditions<a class="headerlink" href="#initial-and-terminal-conditions" title="Permalink to this headline">#</a></h3>
+<p>The initial state variables are all zero at <span class="math notranslate nohighlight">\(t_0 = 0\)</span>, and the final conditions at time <span class="math notranslate nohighlight">\(t_f\)</span> are</p>
+<div class="amsmath math notranslate nohighlight" id="equation-ada49dc1-471a-43cc-a0f4-261e9e036220">
+<span class="eqno">(85)<a class="headerlink" href="#equation-ada49dc1-471a-43cc-a0f4-261e9e036220" title="Permalink to this equation">#</a></span>\[\begin{align}
+    x_f &amp;= d \\
+    \dot{x}_f &amp;= 0 \\
+    \theta_f &amp;= \pi \\
+    \dot{\theta_f} &amp;= 0
+\end{align}\]</div>
+</section>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">#</a></h3>
+<p>The fixed parameters are summarized as follows.</p>
+<table class="colwidths-auto table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Units</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(m_1\)</span></p></td>
+<td><p>1.0</p></td>
+<td><p>kg</p></td>
+<td><p>Cart mass</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(m_2\)</span></p></td>
+<td><p>0.3</p></td>
+<td><p>kg</p></td>
+<td><p>Pole mass</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\ell\)</span></p></td>
+<td><p>0.5</p></td>
+<td><p>m</p></td>
+<td><p>Pole length</p></td>
+</tr>
+<tr class="row-odd"><td><p><span class="math notranslate nohighlight">\(d\)</span></p></td>
+<td><p>2</p></td>
+<td><p>m</p></td>
+<td><p>Cart target location</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(t_f\)</span></p></td>
+<td><p>2</p></td>
+<td><p>s</p></td>
+<td><p>Final time</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="implementing-the-ode">
+<h2>Implementing the ODE<a class="headerlink" href="#implementing-the-ode" title="Permalink to this headline">#</a></h2>
+<p>We first implement the cart-pole ODE as an <code class="docutils literal notranslate"><span class="pre">ExplicitComponent</span></code> as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">openmdao.api</span> <span class="k">as</span> <span class="nn">om</span>
+<span class="n">om</span><span class="o">.</span><span class="n">display_source</span><span class="p">(</span><span class="s2">&quot;dymos.examples.cart_pole.cartpole_dynamics&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style>pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.output_html .hll { background-color: #ffffcc }
+.output_html { background: #f8f8f8; }
+.output_html .c { color: #3D7B7B; font-style: italic } /* Comment */
+.output_html .err { border: 1px solid #FF0000 } /* Error */
+.output_html .k { color: #008000; font-weight: bold } /* Keyword */
+.output_html .o { color: #666666 } /* Operator */
+.output_html .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.output_html .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.output_html .cp { color: #9C6500 } /* Comment.Preproc */
+.output_html .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.output_html .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.output_html .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.output_html .gd { color: #A00000 } /* Generic.Deleted */
+.output_html .ge { font-style: italic } /* Generic.Emph */
+.output_html .gr { color: #E40000 } /* Generic.Error */
+.output_html .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.output_html .gi { color: #008400 } /* Generic.Inserted */
+.output_html .go { color: #717171 } /* Generic.Output */
+.output_html .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.output_html .gs { font-weight: bold } /* Generic.Strong */
+.output_html .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.output_html .gt { color: #0044DD } /* Generic.Traceback */
+.output_html .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.output_html .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.output_html .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.output_html .kp { color: #008000 } /* Keyword.Pseudo */
+.output_html .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.output_html .kt { color: #B00040 } /* Keyword.Type */
+.output_html .m { color: #666666 } /* Literal.Number */
+.output_html .s { color: #BA2121 } /* Literal.String */
+.output_html .na { color: #687822 } /* Name.Attribute */
+.output_html .nb { color: #008000 } /* Name.Builtin */
+.output_html .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.output_html .no { color: #880000 } /* Name.Constant */
+.output_html .nd { color: #AA22FF } /* Name.Decorator */
+.output_html .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.output_html .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.output_html .nf { color: #0000FF } /* Name.Function */
+.output_html .nl { color: #767600 } /* Name.Label */
+.output_html .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.output_html .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.output_html .nv { color: #19177C } /* Name.Variable */
+.output_html .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.output_html .w { color: #bbbbbb } /* Text.Whitespace */
+.output_html .mb { color: #666666 } /* Literal.Number.Bin */
+.output_html .mf { color: #666666 } /* Literal.Number.Float */
+.output_html .mh { color: #666666 } /* Literal.Number.Hex */
+.output_html .mi { color: #666666 } /* Literal.Number.Integer */
+.output_html .mo { color: #666666 } /* Literal.Number.Oct */
+.output_html .sa { color: #BA2121 } /* Literal.String.Affix */
+.output_html .sb { color: #BA2121 } /* Literal.String.Backtick */
+.output_html .sc { color: #BA2121 } /* Literal.String.Char */
+.output_html .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.output_html .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.output_html .s2 { color: #BA2121 } /* Literal.String.Double */
+.output_html .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.output_html .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.output_html .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.output_html .sx { color: #008000 } /* Literal.String.Other */
+.output_html .sr { color: #A45A77 } /* Literal.String.Regex */
+.output_html .s1 { color: #BA2121 } /* Literal.String.Single */
+.output_html .ss { color: #19177C } /* Literal.String.Symbol */
+.output_html .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.output_html .fm { color: #0000FF } /* Name.Function.Magic */
+.output_html .vc { color: #19177C } /* Name.Variable.Class */
+.output_html .vg { color: #19177C } /* Name.Variable.Global */
+.output_html .vi { color: #19177C } /* Name.Variable.Instance */
+.output_html .vm { color: #19177C } /* Name.Variable.Magic */
+.output_html .il { color: #666666 } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Cart-pole dynamics (ODE)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">openmdao.api</span> <span class="k">as</span> <span class="nn">om</span>
+
+
+<span class="k">class</span> <span class="nc">CartPoleDynamics</span><span class="p">(</span><span class="n">om</span><span class="o">.</span><span class="n">ExplicitComponent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes the time derivatives of states given state variables and control inputs.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    m_cart : float</span>
+<span class="sd">        Mass of cart.</span>
+<span class="sd">    m_pole : float</span>
+<span class="sd">        Mass of pole.</span>
+<span class="sd">    l_pole : float</span>
+<span class="sd">        Length of pole.</span>
+<span class="sd">    theta : 1d array</span>
+<span class="sd">        Angle of pole, 0 for vertical downward, positive counter clockwise.</span>
+<span class="sd">    theta_dot : 1d array</span>
+<span class="sd">        Angluar velocity of pole.</span>
+<span class="sd">    f : 1d array</span>
+<span class="sd">        x-wise force applied to the cart.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    x_dotdot : 1d array</span>
+<span class="sd">        Acceleration of cart in x direction.</span>
+<span class="sd">    theta_dotdot : 1d array</span>
+<span class="sd">        Angular acceleration of pole.</span>
+<span class="sd">    e_dot : 1d array</span>
+<span class="sd">        Rate of &quot;energy&quot; state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span>
+            <span class="s2">&quot;num_nodes&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;number of nodes to be evaluated (i.e., length of vectors x, theta, etc)&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">declare</span><span class="p">(</span><span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">9.81</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;gravity constant&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">nn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;num_nodes&quot;</span><span class="p">]</span>
+
+        <span class="c1"># --- inputs ---</span>
+        <span class="c1"># cart-pole parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s2">&quot;m_cart&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;kg&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;cart mass&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s2">&quot;m_pole&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;kg&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;pole mass&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s2">&quot;l_pole&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;pole length&quot;</span><span class="p">)</span>
+        <span class="c1"># state variables. States x, x_dot, energy have no influence on the outputs, so we don&#39;t need them as inputs.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s2">&quot;theta&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nn</span><span class="p">,),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;rad&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;pole angle&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s2">&quot;theta_dot&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nn</span><span class="p">,),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;rad/s&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;pole angle velocity&quot;</span><span class="p">)</span>
+        <span class="c1"># control input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_input</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nn</span><span class="p">,),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;force applied to cart in x direction&quot;</span><span class="p">)</span>
+
+        <span class="c1"># --- outputs ---</span>
+        <span class="c1"># rate of states (accelerations)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="s2">&quot;x_dotdot&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nn</span><span class="p">,),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;m/s**2&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;x acceleration of cart&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="s2">&quot;theta_dotdot&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nn</span><span class="p">,),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;rad/s**2&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;angular acceleration of pole&quot;</span><span class="p">)</span>
+        <span class="c1"># also computes force**2, which will be integrated to compute the objective</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_output</span><span class="p">(</span><span class="s2">&quot;e_dot&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nn</span><span class="p">,),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;N**2&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;square of force to be integrated&quot;</span><span class="p">)</span>
+
+        <span class="c1"># ---  partials ---.</span>
+        <span class="c1"># Jacobian of outputs w.r.t. state/control inputs is diagonal</span>
+        <span class="c1"># because each node (corresponds to time discretization) is independent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_partials</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span> <span class="n">wrt</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;theta&quot;</span><span class="p">,</span> <span class="s2">&quot;theta_dot&quot;</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;exact&quot;</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nn</span><span class="p">),</span> <span class="n">cols</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nn</span><span class="p">))</span>
+
+        <span class="c1"># partials of outputs w.r.t. cart-pole parameters. We will use complex-step, but still declare the sparsity structure.</span>
+        <span class="c1"># NOTE: since the cart-pole parameters are fixed during optimization, these partials are not necessary to declare.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_partials</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">],</span> <span class="n">wrt</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;m_cart&quot;</span><span class="p">,</span> <span class="s2">&quot;m_pole&quot;</span><span class="p">,</span> <span class="s2">&quot;l_pole&quot;</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;cs&quot;</span><span class="p">,</span> <span class="n">rows</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nn</span><span class="p">),</span> <span class="n">cols</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nn</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_check_partial_options</span><span class="p">(</span><span class="n">wrt</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;m_cart&quot;</span><span class="p">,</span> <span class="s2">&quot;m_pole&quot;</span><span class="p">,</span> <span class="s2">&quot;l_pole&quot;</span><span class="p">],</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;fd&quot;</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">):</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;g&quot;</span><span class="p">]</span>
+        <span class="n">mc</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;m_cart&quot;</span><span class="p">]</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;m_pole&quot;</span><span class="p">]</span>
+        <span class="n">lpole</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;l_pole&quot;</span><span class="p">]</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;theta&quot;</span><span class="p">]</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;theta_dot&quot;</span><span class="p">]</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
+
+        <span class="n">sint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">det</span> <span class="o">=</span> <span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">cost</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="p">(</span><span class="n">mc</span> <span class="o">+</span> <span class="n">mp</span><span class="p">)</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;x_dotdot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">sint</span> <span class="o">*</span> <span class="n">cost</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span> <span class="o">+</span> <span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">omega</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sint</span><span class="p">))</span> <span class="o">/</span> <span class="n">det</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;theta_dotdot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">mc</span> <span class="o">+</span> <span class="n">mp</span><span class="p">)</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">sint</span> <span class="o">+</span> <span class="n">cost</span> <span class="o">*</span> <span class="p">(</span><span class="n">f</span> <span class="o">+</span> <span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">omega</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sint</span><span class="p">))</span> <span class="o">/</span> <span class="n">det</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;e_dot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">**</span><span class="mi">2</span>
+
+    <span class="k">def</span> <span class="nf">compute_partials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">jacobian</span><span class="p">):</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;g&quot;</span><span class="p">]</span>
+        <span class="n">mc</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;m_cart&quot;</span><span class="p">]</span>
+        <span class="n">mp</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;m_pole&quot;</span><span class="p">]</span>
+        <span class="n">lpole</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;l_pole&quot;</span><span class="p">]</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;theta&quot;</span><span class="p">]</span>
+        <span class="n">theta_dot</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;theta_dot&quot;</span><span class="p">]</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
+
+        <span class="c1"># --- derivatives of x_dotdot ---</span>
+        <span class="c1"># Collecting Theta Derivative</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mc</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mp</span>
+        <span class="n">dhigh</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">mp</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span>
+            <span class="n">mp</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span>
+            <span class="n">lpole</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span> <span class="o">*</span> <span class="n">theta_dot</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="o">-</span><span class="n">mp</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">f</span> <span class="o">-</span> <span class="n">lpole</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span> <span class="o">*</span> <span class="n">theta_dot</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">dlow</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+
+        <span class="n">jacobian</span><span class="p">[</span><span class="s2">&quot;x_dotdot&quot;</span><span class="p">,</span> <span class="s2">&quot;theta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">low</span> <span class="o">*</span> <span class="n">dhigh</span> <span class="o">-</span> <span class="n">high</span> <span class="o">*</span> <span class="n">dlow</span><span class="p">)</span> <span class="o">/</span> <span class="n">low</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">jacobian</span><span class="p">[</span><span class="s2">&quot;x_dotdot&quot;</span><span class="p">,</span> <span class="s2">&quot;theta_dot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="o">-</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">theta_dot</span> <span class="o">*</span> <span class="n">lpole</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">mp</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mc</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mp</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">jacobian</span><span class="p">[</span><span class="s2">&quot;x_dotdot&quot;</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">lpole</span> <span class="o">/</span> <span class="p">(</span><span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mc</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mp</span><span class="p">)</span>
+
+        <span class="c1"># --- derivatives of theta_dotdot ---</span>
+        <span class="c1"># Collecting Theta Derivative</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mc</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mp</span>
+        <span class="n">dlow</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="p">(</span><span class="n">mc</span> <span class="o">+</span> <span class="n">mp</span><span class="p">)</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">f</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span> <span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">theta_dot</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">dhigh</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">mc</span> <span class="o">+</span> <span class="n">mp</span><span class="p">)</span> <span class="o">*</span> <span class="n">g</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">-</span>
+            <span class="n">f</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">theta_dot</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">jacobian</span><span class="p">[</span><span class="s2">&quot;theta_dotdot&quot;</span><span class="p">,</span> <span class="s2">&quot;theta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">low</span> <span class="o">*</span> <span class="n">dhigh</span> <span class="o">-</span> <span class="n">high</span> <span class="o">*</span> <span class="n">dlow</span><span class="p">)</span> <span class="o">/</span> <span class="n">low</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">jacobian</span><span class="p">[</span><span class="s2">&quot;theta_dotdot&quot;</span><span class="p">,</span> <span class="s2">&quot;theta_dot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="mf">2.0</span> <span class="o">*</span>
+            <span class="n">theta_dot</span> <span class="o">*</span>
+            <span class="n">mp</span> <span class="o">*</span>
+            <span class="n">lpole</span> <span class="o">*</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">/</span>
+            <span class="p">(</span><span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mc</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mp</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">jacobian</span><span class="p">[</span><span class="s2">&quot;theta_dotdot&quot;</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">mp</span> <span class="o">*</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mc</span> <span class="o">-</span> <span class="n">lpole</span> <span class="o">*</span> <span class="n">mp</span><span class="p">)</span>
+
+        <span class="c1"># --- derivatives of e_dot ---</span>
+        <span class="n">jacobian</span><span class="p">[</span><span class="s2">&quot;e_dot&quot;</span><span class="p">,</span> <span class="s2">&quot;theta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">jacobian</span><span class="p">[</span><span class="s2">&quot;e_dot&quot;</span><span class="p">,</span> <span class="s2">&quot;theta_dot&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">jacobian</span><span class="p">[</span><span class="s2">&quot;e_dot&quot;</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">f</span>
+</pre></div>
+</div></div>
+</div>
+</section>
+<section id="building-and-running-the-problem">
+<h2>Building and running the problem<a class="headerlink" href="#building-and-running-the-problem" title="Permalink to this headline">#</a></h2>
+<p>The following is a runscript of the cart-pole optimal control problem.
+First, we instantiate the OpenMDAO problem and set up the Dymos trajectory, phase, and transcription.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Cart-pole optimizatio runscript</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">openmdao.api</span> <span class="k">as</span> <span class="nn">om</span>
+<span class="kn">import</span> <span class="nn">dymos</span> <span class="k">as</span> <span class="nn">dm</span>
+<span class="kn">from</span> <span class="nn">dymos.examples.plotting</span> <span class="kn">import</span> <span class="n">plot_results</span>
+<span class="kn">from</span> <span class="nn">dymos.examples.cart_pole.cartpole_dynamics</span> <span class="kn">import</span> <span class="n">CartPoleDynamics</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">om</span><span class="o">.</span><span class="n">Problem</span><span class="p">()</span>
+
+<span class="c1"># --- instantiate trajectory and phase, setup transcription ---</span>
+<span class="n">traj</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">Trajectory</span><span class="p">()</span>
+<span class="n">p</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_subsystem</span><span class="p">(</span><span class="s1">&#39;traj&#39;</span><span class="p">,</span> <span class="n">traj</span><span class="p">)</span>
+<span class="n">phase</span> <span class="o">=</span> <span class="n">dm</span><span class="o">.</span><span class="n">Phase</span><span class="p">(</span><span class="n">transcription</span><span class="o">=</span><span class="n">dm</span><span class="o">.</span><span class="n">GaussLobatto</span><span class="p">(</span><span class="n">num_segments</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">compressed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solve_segments</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">ode_class</span><span class="o">=</span><span class="n">CartPoleDynamics</span><span class="p">)</span>
+<span class="c1"># NOTE: set solve_segments=True to do solver-based shooting</span>
+<span class="n">traj</span><span class="o">.</span><span class="n">add_phase</span><span class="p">(</span><span class="s1">&#39;phase&#39;</span><span class="p">,</span> <span class="n">phase</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;dymos.phase.phase.Phase at 0x7f94ad963bb0&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we add the state variables, controls, and cart-pole parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- set state and control variables ---</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">set_time_options</span><span class="p">(</span><span class="n">fix_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fix_duration</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">duration_val</span><span class="o">=</span><span class="mf">2.</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
+<span class="c1"># declare state variables. You can also set lower/upper bounds and scalings here.</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">fix_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lower</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">rate_source</span><span class="o">=</span><span class="s1">&#39;x_dot&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">ref</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">defect_ref</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span><span class="s1">&#39;x_dot&#39;</span><span class="p">,</span> <span class="n">fix_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rate_source</span><span class="o">=</span><span class="s1">&#39;x_dotdot&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">ref</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">defect_ref</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;m/s&#39;</span><span class="p">)</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span><span class="s1">&#39;theta&#39;</span><span class="p">,</span> <span class="n">fix_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rate_source</span><span class="o">=</span><span class="s1">&#39;theta_dot&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">ref</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">defect_ref</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;rad&#39;</span><span class="p">)</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span><span class="s1">&#39;theta_dot&#39;</span><span class="p">,</span> <span class="n">fix_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rate_source</span><span class="o">=</span><span class="s1">&#39;theta_dotdot&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">ref</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">defect_ref</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;rad/s&#39;</span><span class="p">)</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_state</span><span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span> <span class="n">fix_initial</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rate_source</span><span class="o">=</span><span class="s1">&#39;e_dot&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">ref</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">defect_ref</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;N**2*s&#39;</span><span class="p">)</span>  <span class="c1"># integration of force**2. This does not have the energy unit, but I call it &quot;energy&quot; anyway.</span>
+
+<span class="c1"># declare control inputs</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_control</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">fix_initial</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rate_continuity</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">lower</span><span class="o">=-</span><span class="mi">20</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">ref</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;N&#39;</span><span class="p">)</span>
+
+<span class="c1"># add cart-pole parameters (set static_target=True because these params are not time-depencent)</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="s1">&#39;m_cart&#39;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;kg&#39;</span><span class="p">,</span> <span class="n">static_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="s1">&#39;m_pole&#39;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;kg&#39;</span><span class="p">,</span> <span class="n">static_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="s1">&#39;l_pole&#39;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">,</span> <span class="n">static_target</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We set the terminal conditions as boundary constraints and declare the optimization objective.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- set terminal constraint ---</span>
+<span class="c1"># alternatively, you can impose those by setting `fix_final=True` in phase.add_state()</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_boundary_constraint</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;final&#39;</span><span class="p">,</span> <span class="n">equals</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>  <span class="c1"># final horizontal displacement</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_boundary_constraint</span><span class="p">(</span><span class="s1">&#39;theta&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;final&#39;</span><span class="p">,</span> <span class="n">equals</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;rad&#39;</span><span class="p">)</span>  <span class="c1"># final pole angle</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_boundary_constraint</span><span class="p">(</span><span class="s1">&#39;x_dot&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;final&#39;</span><span class="p">,</span> <span class="n">equals</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;m/s&#39;</span><span class="p">)</span>  <span class="c1"># 0 velocity at the and</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_boundary_constraint</span><span class="p">(</span><span class="s1">&#39;theta_dot&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;final&#39;</span><span class="p">,</span> <span class="n">equals</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;rad/s&#39;</span><span class="p">)</span>  <span class="c1"># 0 angular velocity at the end</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_boundary_constraint</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;final&#39;</span><span class="p">,</span> <span class="n">equals</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;N&#39;</span><span class="p">)</span>  <span class="c1"># 0 force at the end</span>
+
+<span class="c1"># --- set objective function ---</span>
+<span class="c1"># we minimize the integral of force**2.</span>
+<span class="n">phase</span><span class="o">.</span><span class="n">add_objective</span><span class="p">(</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;final&#39;</span><span class="p">,</span> <span class="n">ref</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we configure the optimizer and declare the total Jacobian coloring to accelerate the derivative computations.
+We then call the <code class="docutils literal notranslate"><span class="pre">setup</span></code> method to setup the OpenMDAO problem.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- configure optimizer ---</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">om</span><span class="o">.</span><span class="n">pyOptSparseDriver</span><span class="p">()</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;optimizer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;IPOPT&quot;</span>
+<span class="c1"># IPOPT options</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">opt_settings</span><span class="p">[</span><span class="s1">&#39;mu_init&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-1</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">opt_settings</span><span class="p">[</span><span class="s1">&#39;max_iter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">600</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">opt_settings</span><span class="p">[</span><span class="s1">&#39;constr_viol_tol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">opt_settings</span><span class="p">[</span><span class="s1">&#39;compl_inf_tol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-6</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">opt_settings</span><span class="p">[</span><span class="s1">&#39;tol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-5</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">opt_settings</span><span class="p">[</span><span class="s1">&#39;print_level&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">opt_settings</span><span class="p">[</span><span class="s1">&#39;nlp_scaling_method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;gradient-based&#39;</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">opt_settings</span><span class="p">[</span><span class="s1">&#39;alpha_for_y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;safer-min-dual-infeas&#39;</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">opt_settings</span><span class="p">[</span><span class="s1">&#39;mu_strategy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;monotone&#39;</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">opt_settings</span><span class="p">[</span><span class="s1">&#39;bound_mult_init_method&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;mu-based&#39;</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;print_results&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># declare total derivative coloring to accelerate the UDE linear solves</span>
+<span class="n">p</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">declare_coloring</span><span class="p">()</span>
+
+<span class="n">p</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- Constraint Report [traj] ---
+    --- phase ---
+        [final]   1.0000e+00 == x [m]
+        [final]   3.1416e+00 == theta [rad]
+        [final]   0.0000e+00 == x_dot [m/s]
+        [final]   0.0000e+00 == theta_dot [rad/s]
+        [final]   0.0000e+00 == f [N]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;openmdao.core.problem.Problem at 0x7f95011cf760&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we are ready to run optimization. But before that, set the initial optimization variables using <code class="docutils literal notranslate"><span class="pre">set_val</span></code> methods to help convergence.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- set initial guess ---</span>
+<span class="c1"># The initial condition of cart-pole (i.e., state values at time 0) is set here because we set `fix_initial=True` when declaring the states.</span>
+<span class="n">p</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="s1">&#39;traj.phase.t_initial&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># set initial time to 0.</span>
+<span class="n">p</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="s2">&quot;traj.phase.states:x&quot;</span><span class="p">,</span> <span class="n">phase</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">ys</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">nodes</span><span class="o">=</span><span class="s2">&quot;state_input&quot;</span><span class="p">),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="s2">&quot;traj.phase.states:x_dot&quot;</span><span class="p">,</span> <span class="n">phase</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">ys</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nodes</span><span class="o">=</span><span class="s2">&quot;state_input&quot;</span><span class="p">),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;m/s&quot;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="s2">&quot;traj.phase.states:theta&quot;</span><span class="p">,</span> <span class="n">phase</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">ys</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">],</span> <span class="n">nodes</span><span class="o">=</span><span class="s2">&quot;state_input&quot;</span><span class="p">),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;rad&quot;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="s2">&quot;traj.phase.states:theta_dot&quot;</span><span class="p">,</span> <span class="n">phase</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">ys</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nodes</span><span class="o">=</span><span class="s2">&quot;state_input&quot;</span><span class="p">),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;rad/s&quot;</span><span class="p">)</span>
+<span class="n">p</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="s2">&quot;traj.phase.states:energy&quot;</span><span class="p">,</span> <span class="n">phase</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">ys</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span> <span class="n">nodes</span><span class="o">=</span><span class="s2">&quot;state_input&quot;</span><span class="p">))</span>
+<span class="n">p</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="s2">&quot;traj.phase.controls:f&quot;</span><span class="p">,</span> <span class="n">phase</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">ys</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">nodes</span><span class="o">=</span><span class="s2">&quot;control_input&quot;</span><span class="p">),</span> <span class="n">units</span><span class="o">=</span><span class="s2">&quot;N&quot;</span><span class="p">)</span>
+    
+<span class="c1"># --- run optimization ---</span>
+<span class="n">dm</span><span class="o">.</span><span class="n">run_problem</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">run_driver</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">simulate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">simulate_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;method&#39;</span> <span class="p">:</span> <span class="s1">&#39;Radau&#39;</span><span class="p">,</span> <span class="s1">&#39;times_per_seg&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+<span class="c1"># NOTE: with Simulate=True, dymos will call scipy.integrate.solve_ivp and simulate the trajectory using the optimized control inputs.</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model viewer data has already been recorded for Driver.
+Model viewer data has already been recorded for Driver.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Full total jacobian was computed 3 times, taking 0.892387 seconds.
+Total jacobian shape: (206, 281) 
+
+
+Jacobian shape: (206, 281)  ( 2.82% nonzero)
+FWD solves: 10   REV solves: 0
+Total colors vs. total size: 10 vs 281  (96.4% improvement)
+
+Sparsity computed using tolerance: 1e-25
+Time to compute sparsity: 0.892387 sec.
+Time to compute coloring: 0.135620 sec.
+Memory to compute coloring: 0.000000 MB.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/tabulate/__init__.py:108: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  or (len(row) &gt;= 2 and row[1] == SEPARATING_LINE)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulating trajectory traj
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Done simulating trajectory traj
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
+</pre></div>
+</div>
+</div>
+</div>
+<p>After running optimization and simulation, the results can be plotted using the <code class="docutils literal notranslate"><span class="pre">plot_results</span></code> function of Dymos.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># --- get results and plot ---</span>
+<span class="c1"># objective value</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_val</span><span class="p">(</span><span class="s1">&#39;traj.phase.states:energy&#39;</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;N**2*s&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;objective value:&#39;</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+<span class="c1"># get optimization solution and simulation (time integration) results</span>
+<span class="n">sol</span> <span class="o">=</span> <span class="n">om</span><span class="o">.</span><span class="n">CaseReader</span><span class="p">(</span><span class="s1">&#39;dymos_solution.db&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_case</span><span class="p">(</span><span class="s1">&#39;final&#39;</span><span class="p">)</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">om</span><span class="o">.</span><span class="n">CaseReader</span><span class="p">(</span><span class="s1">&#39;dymos_simulation.db&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_case</span><span class="p">(</span><span class="s1">&#39;final&#39;</span><span class="p">)</span>
+
+<span class="c1"># plot time histories of x, x_dot, theta, theta_dot</span>
+<span class="n">plot_results</span><span class="p">([(</span><span class="s1">&#39;traj.phase.timeseries.time&#39;</span><span class="p">,</span> <span class="s1">&#39;traj.phase.timeseries.states:x&#39;</span><span class="p">,</span> <span class="s1">&#39;time (s)&#39;</span><span class="p">,</span> <span class="s1">&#39;x (m)&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">&#39;traj.phase.timeseries.time&#39;</span><span class="p">,</span> <span class="s1">&#39;traj.phase.timeseries.states:x_dot&#39;</span><span class="p">,</span> <span class="s1">&#39;time (s)&#39;</span><span class="p">,</span> <span class="s1">&#39;vx (m/s)&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">&#39;traj.phase.timeseries.time&#39;</span><span class="p">,</span> <span class="s1">&#39;traj.phase.timeseries.states:theta&#39;</span><span class="p">,</span> <span class="s1">&#39;time (s)&#39;</span><span class="p">,</span> <span class="s1">&#39;theta (rad)&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">&#39;traj.phase.timeseries.time&#39;</span><span class="p">,</span> <span class="s1">&#39;traj.phase.timeseries.states:theta_dot&#39;</span><span class="p">,</span> <span class="s1">&#39;time (s)&#39;</span><span class="p">,</span> <span class="s1">&#39;theta_dot (rad/s)&#39;</span><span class="p">),</span>
+              <span class="p">(</span><span class="s1">&#39;traj.phase.timeseries.time&#39;</span><span class="p">,</span> <span class="s1">&#39;traj.phase.timeseries.controls:f&#39;</span><span class="p">,</span> <span class="s1">&#39;time (s)&#39;</span><span class="p">,</span> <span class="s1">&#39;control (N)&#39;</span><span class="p">)],</span>
+             <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Cart-Pole Problem&#39;</span><span class="p">,</span> <span class="n">p_sol</span><span class="o">=</span><span class="n">sol</span><span class="p">,</span> <span class="n">p_sim</span><span class="o">=</span><span class="n">sim</span><span class="p">)</span>
+
+<span class="c1"># uncomment the following lines to show the cart-pole animation</span>
+<span class="c1">### x = sol.get_val(&#39;traj.phase.timeseries.states:x&#39;, units=&#39;m&#39;)</span>
+<span class="c1">### theta = sol.get_val(&#39;traj.phase.timeseries.states:theta&#39;, units=&#39;rad&#39;)</span>
+<span class="c1">### force = sol.get_val(&#39;traj.phase.timeseries.controls:f&#39;, units=&#39;N&#39;)</span>
+<span class="c1">### npts = len(x)</span>
+
+<span class="c1">### from dymos.examples.cart_pole.animate_cartpole import animate_cartpole</span>
+<span class="c1">### animate_cartpole(x.reshape(npts), theta.reshape(npts), force.reshape(npts), interval=20, force_scaler=0.02)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>objective value: [58.83924737]
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;Figure size 1000x800 with 5 Axes&gt;,
+ array([&lt;AxesSubplot: xlabel=&#39;time (s)&#39;, ylabel=&#39;x (m)&#39;&gt;,
+        &lt;AxesSubplot: xlabel=&#39;time (s)&#39;, ylabel=&#39;vx (m/s)&#39;&gt;,
+        &lt;AxesSubplot: xlabel=&#39;time (s)&#39;, ylabel=&#39;theta (rad)&#39;&gt;,
+        &lt;AxesSubplot: xlabel=&#39;time (s)&#39;, ylabel=&#39;theta_dot (rad/s)&#39;&gt;,
+        &lt;AxesSubplot: xlabel=&#39;time (s)&#39;, ylabel=&#39;control (N)&#39;&gt;],
+       dtype=object))
+</pre></div>
+</div>
+<img alt="../../_images/cart_pole_14_2.png" src="../../_images/cart_pole_14_2.png" />
+</div>
+</div>
+<p>The optimized cart-pole motion should look like the following:</p>
+<p><img alt="Cart-pole optimized trajectory." src="../../_images/cartpole-animation.gif" /></p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">#</a></h2>
+<div class="docutils container" id="id2">
+<dl class="citation">
+<dt class="label" id="id53"><span class="brackets">Kel17</span></dt>
+<dd><p>Matthew Kelly. An introduction to trajectory optimization: How to do your own direct collocation. <em>SIAM Review</em>, 59(4):849–904, 2017. <a class="reference external" href="https://doi.org/10.1137/16M1062569">doi:10.1137/16M1062569</a>.</p>
+</dd>
+</dl>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./examples/cart_pole"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../water_rocket/water_rocket.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Water Rocket</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../brachistochrone/brachistochrone_tandem_phases.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Brachistochrone with tandem phases</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By The Dymos Development Team<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

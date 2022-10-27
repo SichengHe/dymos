@@ -291,6 +291,16 @@ const thebe_selector_output = ".output, .cell_output"
      Water Rocket
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../cart_pole/cart_pole.html">
+     Cart-Pole Optimal Control
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../brachistochrone/brachistochrone_tandem_phases.html">
+     Brachistochrone with tandem phases
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -313,6 +323,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="../../features/phases/phases.html">
      Phases of a Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/analytic_phases.html">
+     Analytic Phases in Dymos
     </a>
    </li>
    <li class="toctree-l2">
@@ -429,8 +444,8 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../api/run_problem.html">
-     The Dymos run_problem function
+    <a class="reference internal" href="../../api/run_problem_function.html">
+     The run_problem function
     </a>
    </li>
    <li class="toctree-l2">
@@ -743,15 +758,15 @@ title="Print to PDF"
 <section id="the-ode-system">
 <h2>The ODE system<a class="headerlink" href="#the-ode-system" title="Permalink to this headline">#</a></h2>
 <p>The ODE of the Robertson Problem is</p>
-<div class="amsmath math notranslate nohighlight" id="equation-fa1b295c-bc35-491a-8730-96663b7a6476">
-<span class="eqno">(77)<a class="headerlink" href="#equation-fa1b295c-bc35-491a-8730-96663b7a6476" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-738458f6-bda8-494b-b961-554d12ae9a84">
+<span class="eqno">(77)<a class="headerlink" href="#equation-738458f6-bda8-494b-b961-554d12ae9a84" title="Permalink to this equation">#</a></span>\[\begin{align}
     \dot x = &amp;        - 0.04 x + 10^4 y \cdot z &amp;                          \\
     \dot y = &amp; \;\;\;\: 0.04 x - 10^4 y \cdot z &amp;        - 3\cdot 10^7 y^2 \\
     \dot z = &amp;                                  &amp; \;\;\;\: 3\cdot 10^7 y^2 \\
 \end{align}\]</div>
 <p>where <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span> and <span class="math notranslate nohighlight">\(z\)</span> are arbitrary states. The initial conditions are</p>
-<div class="amsmath math notranslate nohighlight" id="equation-6c71c7ca-cff9-499d-a54e-10d2e27104c6">
-<span class="eqno">(78)<a class="headerlink" href="#equation-6c71c7ca-cff9-499d-a54e-10d2e27104c6" title="Permalink to this equation">#</a></span>\[\begin{align}
+<div class="amsmath math notranslate nohighlight" id="equation-e2e020f5-aad2-47db-8997-6199a028cdec">
+<span class="eqno">(78)<a class="headerlink" href="#equation-e2e020f5-aad2-47db-8997-6199a028cdec" title="Permalink to this equation">#</a></span>\[\begin{align}
     x_0 &amp;= 1 \\
     y_0 &amp;= z_0 = 0.
 \end{align}\]</div>

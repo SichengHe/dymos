@@ -288,6 +288,16 @@ const thebe_selector_output = ".output, .cell_output"
      Water Rocket
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/cart_pole/cart_pole.html">
+     Cart-Pole Optimal Control
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/brachistochrone/brachistochrone_tandem_phases.html">
+     Brachistochrone with tandem phases
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -310,6 +320,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="../features/phases/phases.html">
      Phases of a Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../features/phases/analytic_phases.html">
+     Analytic Phases in Dymos
     </a>
    </li>
    <li class="toctree-l2">
@@ -426,8 +441,8 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../api/run_problem.html">
-     The Dymos run_problem function
+    <a class="reference internal" href="../api/run_problem_function.html">
+     The run_problem function
     </a>
    </li>
    <li class="toctree-l2">
@@ -1015,24 +1030,29 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-----------------------------------
 Component: BrachistochroneODE &#39;ode&#39;
 -----------------------------------
+
 &#39;&lt;output&gt;&#39; wrt &#39;&lt;variable&gt;&#39; | calc mag.  | check mag. | a(cal-chk) | r(cal-chk)
 -------------------------------------------------------------------------------
 
-&#39;check&#39;    wrt &#39;theta&#39;      | 1.3741e+03 | 1.3741e+03 | 2.2738e-13 | 1.6548e-16
-&#39;check&#39;    wrt &#39;v&#39;          | 8.2346e+01 | 8.2346e+01 | 1.4213e-14 | 1.7260e-16
-&#39;vdot&#39;     wrt &#39;theta&#39;      | 1.6702e+01 | 1.6702e+01 | 1.7764e-15 | 1.0636e-16
+&#39;check&#39;    wrt &#39;theta&#39;      | 1.3475e+01 | 1.3475e+01 | 4.9654e-15 | 3.6848e-16
+&#39;check&#39;    wrt &#39;v&#39;          | 3.0821e+00 | 3.0821e+00 | 6.6613e-16 | 2.1613e-16
+&#39;vdot&#39;     wrt &#39;theta&#39;      | 1.7649e+01 | 1.7649e+01 | 2.8087e-15 | 1.5914e-16
 &#39;vdot&#39;     wrt &#39;v&#39;          | 0.0000e+00 | 0.0000e+00 | 0.0000e+00 | nan
-&#39;xdot&#39;     wrt &#39;theta&#39;      | 5.9143e+00 | 5.9143e+00 | 1.0179e-15 | 1.7211e-16
-&#39;xdot&#39;     wrt &#39;v&#39;          | 1.7031e+00 | 1.7031e+00 | 2.4825e-16 | 1.4577e-16
-&#39;ydot&#39;     wrt &#39;theta&#39;      | 1.0184e+01 | 1.0184e+01 | 1.5384e-15 | 1.5106e-16
-&#39;ydot&#39;     wrt &#39;v&#39;          | 1.4490e+00 | 1.4490e+00 | 1.9230e-16 | 1.3271e-16
+&#39;xdot&#39;     wrt &#39;theta&#39;      | 6.0271e+00 | 6.0271e+00 | 1.4043e-15 | 2.3300e-16
+&#39;xdot&#39;     wrt &#39;v&#39;          | 1.7997e+00 | 1.7997e+00 | 2.9374e-16 | 1.6321e-16
+&#39;ydot&#39;     wrt &#39;theta&#39;      | 9.1620e+00 | 9.1620e+00 | 1.2755e-15 | 1.3922e-16
+&#39;ydot&#39;     wrt &#39;v&#39;          | 1.3270e+00 | 1.3270e+00 | 2.2888e-16 | 1.7248e-16
 
 ##################################################################
 Sub Jacobian with Largest Relative Error: BrachistochroneODE &#39;ode&#39;
 ##################################################################
+
 &#39;&lt;output&gt;&#39; wrt &#39;&lt;variable&gt;&#39; | calc mag.  | check mag. | a(cal-chk) | r(cal-chk)
 -------------------------------------------------------------------------------
-&#39;check&#39;    wrt &#39;v&#39;          | 8.2346e+01 | 8.2346e+01 | 1.4213e-14 | 1.7260e-16
+&#39;check&#39;    wrt &#39;theta&#39;      | 1.3475e+01 | 1.3475e+01 | 4.9654e-15 | 3.6848e-16
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/openmdao/core/problem.py:2565: DerivativesWarning:No derivative data found for Component &#39;vars&#39;.
 </pre></div>
 </div>
 </div>

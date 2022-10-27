@@ -289,6 +289,16 @@ const thebe_selector_output = ".output, .cell_output"
      Water Rocket
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../cart_pole/cart_pole.html">
+     Cart-Pole Optimal Control
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="brachistochrone_tandem_phases.html">
+     Brachistochrone with tandem phases
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -311,6 +321,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="../../features/phases/phases.html">
      Phases of a Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../../features/phases/analytic_phases.html">
+     Analytic Phases in Dymos
     </a>
    </li>
    <li class="toctree-l2">
@@ -427,8 +442,8 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul>
    <li class="toctree-l2">
-    <a class="reference internal" href="../../api/run_problem.html">
-     The Dymos run_problem function
+    <a class="reference internal" href="../../api/run_problem_function.html">
+     The run_problem function
     </a>
    </li>
    <li class="toctree-l2">
@@ -847,11 +862,7 @@ title="Print to PDF"
 INFO: checking out_of_order
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/dymos/phase/phase.py:1723: RuntimeWarning: Phase &#39;phase0&#39; initial time is an externally-connected input, therefore fix_initial has no effect.
-  warnings.warn(f&#39;Phase \&#39;{self.name}\&#39; initial time is an externally-connected input, &#39;
-/usr/share/miniconda/envs/test/lib/python3.10/site-packages/dymos/phase/phase.py:1740: RuntimeWarning: Phase &#39;phase0&#39; time duration is an externally-connected input, therefore fix_duration has no effect.
-  warnings.warn(f&#39;Phase \&#39;{self.name}\&#39; time duration is an externally-connected input, &#39;
-/usr/share/miniconda/envs/test/lib/python3.10/site-packages/openmdao/recorders/sqlite_recorder.py:227: UserWarning:The existing case recorder file, dymos_solution.db, is being overwritten.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/openmdao/recorders/sqlite_recorder.py:227: UserWarning:The existing case recorder file, dymos_solution.db, is being overwritten.
 INFO:check_config:checking out_of_order
 </pre></div>
 </div>
@@ -958,7 +969,7 @@ INFO: checking out_of_order
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>INFO:check_config:checking auto_ivc_warnings
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Full total jacobian was computed 3 times, taking 0.102664 seconds.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Full total jacobian was computed 3 times, taking 0.109459 seconds.
 Total jacobian shape: (40, 50) 
 
 
@@ -967,8 +978,8 @@ FWD solves: 8   REV solves: 0
 Total colors vs. total size: 8 vs 50  (84.0% improvement)
 
 Sparsity computed using tolerance: 1e-25
-Time to compute sparsity: 0.102664 sec.
-Time to compute coloring: 0.028337 sec.
+Time to compute sparsity: 0.109459 sec.
+Time to compute coloring: 0.031782 sec.
 Memory to compute coloring: 0.000000 MB.
 </pre></div>
 </div>
@@ -979,17 +990,19 @@ Memory to compute coloring: 0.000000 MB.
             Gradient evaluations: 60
 Optimization Complete
 -----------------------------------
-
-Simulating trajectory traj
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Done simulating trajectory traj
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/tabulate/__init__.py:108: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  or (len(row) &gt;= 2 and row[1] == SEPARATING_LINE)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Simulating trajectory traj
+Done simulating trajectory traj
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
 </pre></div>
 </div>
-<img alt="../../_images/brachistochrone_upstream_init_duration_states_2_40.png" src="../../_images/brachistochrone_upstream_init_duration_states_2_40.png" />
 </div>
 </div>
 <section id="plotting-the-results">

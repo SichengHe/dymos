@@ -289,6 +289,16 @@ const thebe_selector_output = ".output, .cell_output"
      Water Rocket
     </a>
    </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/cart_pole/cart_pole.html">
+     Cart-Pole Optimal Control
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../examples/brachistochrone/brachistochrone_tandem_phases.html">
+     Brachistochrone with tandem phases
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -311,6 +321,11 @@ const thebe_selector_output = ".output, .cell_output"
    <li class="toctree-l2">
     <a class="reference internal" href="../features/phases/phases.html">
      Phases of a Trajectory
+    </a>
+   </li>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../features/phases/analytic_phases.html">
+     Analytic Phases in Dymos
     </a>
    </li>
    <li class="toctree-l2">
@@ -427,8 +442,8 @@ const thebe_selector_output = ".output, .cell_output"
   </label>
   <ul class="current">
    <li class="toctree-l2">
-    <a class="reference internal" href="run_problem.html">
-     The Dymos run_problem function
+    <a class="reference internal" href="run_problem_function.html">
+     The run_problem function
     </a>
    </li>
    <li class="toctree-l2">
@@ -776,16 +791,20 @@ title="Print to PDF"
 <h2>GaussLobatto Options<a class="headerlink" href="#gausslobatto-options" title="Permalink to this headline">#</a></h2>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/share/miniconda/envs/test/lib/python3.10/site-packages/tabulate/__init__.py:108: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  or (len(row) &gt;= 2 and row[1] == SEPARATING_LINE)
+</pre></div>
+</div>
 <div class="output text_html"><table>
 <thead>
 <tr><th style="text-align:center; max-width:600px; overflow-wrap:break-word;">Option        </th><th style="text-align: right;">  Default</th><th style="text-align:center; max-width:600px; overflow-wrap:break-word;">Acceptable Values             </th><th style="text-align:center; max-width:600px; overflow-wrap:break-word;">Acceptable Types              </th><th style="text-align:center; max-width:600px; overflow-wrap:break-word;">Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     </th></tr>
 </thead>
 <tbody>
-<tr><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">compressed    </td><td style="text-align: right;">     True</td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">[True, False]                 </td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">[&#x27;bool&#x27;]                      </td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">Use compressed transcription, meaning state and control valuesat segment boundaries are not duplicated on input.  This implicitly enforces value continuity between segments but in some cases may make the problem more difficult to solve.                                                                                                                                                                                                                                                                                                                                                    </td></tr>
+<tr><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">compressed    </td><td style="text-align: right;">        1</td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">[True, False]                 </td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">[&#x27;bool&#x27;]                      </td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">Use compressed transcription, meaning state and control valuesat segment boundaries are not duplicated on input.  This implicitly enforces value continuity between segments but in some cases may make the problem more difficult to solve.                                                                                                                                                                                                                                                                                                                                                    </td></tr>
 <tr><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">num_segments  </td><td style="text-align: right;">        1</td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">N/A                           </td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">[&#x27;int&#x27;]                       </td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">Number of segments                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </td></tr>
 <tr><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">order         </td><td style="text-align: right;">        5</td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">N/A                           </td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">[&#x27;int&#x27;, &#x27;Sequence&#x27;, &#x27;ndarray&#x27;]</td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">Order of the state transcription. The order of the control transcription is `order - 1`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </td></tr>
 <tr><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">segment_ends  </td><td style="text-align: right;">      N/A</td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">N/A                           </td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">[&#x27;Sequence&#x27;, &#x27;ndarray&#x27;]       </td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">Locations of segment ends or None for equally spaced segments                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   </td></tr>
-<tr><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">solve_segments</td><td style="text-align: right;">    False</td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">[False, &#x27;forward&#x27;, &#x27;backward&#x27;]</td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">N/A                           </td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">Applies &#x27;solve_segments&#x27; behavior to _all_ states in the Phase. If &#x27;forward&#x27;, collocation defects within each segment are solved with a Newton solver by fixing the initial value in the phase (if using compressed transcription) or segment (if not using compressed transcription). This provides a forward shooting (or multiple shooting) method.  If &#x27;backward&#x27;, the final value in the phase or segment is fixed and a solver finds the other ones to mimic reverse propagation. Set to False (the default) to explicitly disable the use of a solver to converge the state time history.</td></tr>
+<tr><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">solve_segments</td><td style="text-align: right;">        0</td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">[False, &#x27;forward&#x27;, &#x27;backward&#x27;]</td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">N/A                           </td><td style="text-align:left; max-width:600px; overflow-wrap:break-word;">Applies &#x27;solve_segments&#x27; behavior to _all_ states in the Phase. If &#x27;forward&#x27;, collocation defects within each segment are solved with a Newton solver by fixing the initial value in the phase (if using compressed transcription) or segment (if not using compressed transcription). This provides a forward shooting (or multiple shooting) method.  If &#x27;backward&#x27;, the final value in the phase or segment is fixed and a solver finds the other ones to mimic reverse propagation. Set to False (the default) to explicitly disable the use of a solver to converge the state time history.</td></tr>
 </tbody>
 </table></div></div>
 </div>
